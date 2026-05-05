@@ -1,3 +1,0 @@
-function start() {
-    cm.warp(310070490, 4)
-};
