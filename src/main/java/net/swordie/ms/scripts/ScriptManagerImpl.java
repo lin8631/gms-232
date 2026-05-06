@@ -246,7 +246,9 @@ public class ScriptManagerImpl {
         scriptInfo.setObjectID(objID);
         getScripts().put(scriptType, scriptInfo);
 
-         if (selectJsCondition(scriptInfo)) {
+//        boolean b = selectJsCondition(scriptInfo);
+        boolean b = false;
+        if (b) {
             if (!isField()) {
                 String format = String.format("[JS] - Starting script [%s] , templateID [%d] scriptType [%s].", scriptName, parentID, scriptType);
                 chrFromMethods.chatMessage(Mob, format);

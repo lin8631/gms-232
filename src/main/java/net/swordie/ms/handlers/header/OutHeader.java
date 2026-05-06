@@ -83,7 +83,7 @@ public enum OutHeader {
     UNK212_69(73),
     SOME_DATE_RESPONSE(74),
 
-    // CMapLoadable::OnPacket        v223.1
+    // CMapLoadable::OnPacket        v223.1  直接寫死在了onfield
     SET_BACK_EFFECT(75),
     SET_MAP_TAGGED_OBJECT_VISISBLE(76),
     SET_MAP_TAGGED_OBJECT_SMOOTH_VISIBLE(77),
@@ -2549,6 +2549,8 @@ public enum OutHeader {
 
     // CField::OnPacket       v223.1
     UNK204_2042(2344),
+
+
     NO(9999),
     ;
 

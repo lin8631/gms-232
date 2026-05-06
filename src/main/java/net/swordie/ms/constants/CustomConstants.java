@@ -17,7 +17,7 @@ public class CustomConstants {
 
     public static final boolean SSB_AUTOMATIC_ROTATION = true;
 
-    public static final int BOSS_CRYSTAL_PRICE_INCREASE = 400; //percent increase
+    public static final int BOSS_CRYSTAL_PRICE_INCREASE = 0; //percent increase 水晶售賣價格提升倍率
     // GML & MLG Exchange
     public static final int GML_TAX = 10; // 10%
     public static final int MLG_TAX = 20; // 20%
