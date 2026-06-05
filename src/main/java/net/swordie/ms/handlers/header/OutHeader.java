@@ -33,7 +33,7 @@ public enum OutHeader {
     PING_CHECK_RESULT(19),
     AUTH_CODE_CHANGED(20),
     AUTH_MESSAGE(21),
-    SECURITY_PACKET(22),
+    LP_ApplyHotfix(22),
     PRIVATE_SERVER_PACKET(25),
     CHANGE_SPW_RESULT(26),
     UNK218_27(27),
@@ -83,7 +83,7 @@ public enum OutHeader {
     UNK212_69(73),
     SOME_DATE_RESPONSE(74),
 
-    // CMapLoadable::OnPacket        v223.1  直接寫死在了onfield
+    // CMapLoadable::OnPacket        v223.1  直接寫死在了CLogin::OnPacket 、CField
     SET_BACK_EFFECT(75),
     SET_MAP_TAGGED_OBJECT_VISISBLE(76),
     SET_MAP_TAGGED_OBJECT_SMOOTH_VISIBLE(77),
@@ -557,6 +557,7 @@ public enum OutHeader {
     UNK220_539(549),
     UNK227_554(550),
     MACRO_SYS_DATA_INIT(551),
+
 
     // CStage::OnPacket        v223.1
     SET_FIELD(552),
@@ -2311,7 +2312,7 @@ public enum OutHeader {
     AUCTION_RESULT(2078),
     UNK204_1799(2079),
 
-    // CUIHandler::OnPacket
+    // CUIContext::OnPacket
     ATTENDANCE_EVENT_INFO(2081),
     UNK200_1779(2082),
     ARK_FISHING_INFO(2083),
@@ -2376,6 +2377,8 @@ public enum OutHeader {
     UNK223_2052(2141),
     OZ_BUY_RESULT(2142),
     UNK227_2081(2143),
+
+
 
     // Unk sub
     UNK202_1857(2154), // *
@@ -2555,11 +2558,11 @@ public enum OutHeader {
     ;
 
     private static List<OutHeader> spam = Arrays.asList(
-            ALIVE_REQ,
+//            ALIVE_REQ,
 //            PRIVATE_SERVER_PACKET,
-            MOB_CTRL_ACK,
-            MOB_MOVE,
-            FIRST_ENTER_REWARD,
+//            MOB_CTRL_ACK,
+//            MOB_MOVE,
+//            FIRST_ENTER_REWARD,
             OPCODE_ENCRYPTION
 
 //            CHAT_MSG,
