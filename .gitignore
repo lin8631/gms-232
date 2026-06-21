@@ -1,8 +1,8 @@
 *.class
 .idea/
 SwordieMS.iml
-WZ/
-wz/
+/WZ/
+/wz/
 wzdat/
 info txts/
 dat/

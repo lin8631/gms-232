@@ -1,0 +1,60 @@
+## 安全审查报告：gms-232 (SwordieMS MapleStory v232 私服模拟器)
+
+**审查范围**: 7883 个文件, 109MB | **审查日期**: 2026-06-13
+**审查结论**: ⚠️ **未发现恶意病毒/后门/暗桩，但存在若干严重安全隐患**
+
+---
+
+### 🔴 高危漏洞（需立即处理）
+
+| # | 类型 | 位置 | 说明 |
+|---|------|------|------|
+| 1 | **认证绕过** | `LoginHandler.java:202-216` | 从 `127.0.0.1` 连接且 `userId=0` 时，自动跳过密码认证，以硬编码用户 ID(1/2/3) 登录。这是一个调试后门 |
+| 2 | **操作系统命令执行** | `AdminCommands.java:3910` | `@pull` 管理员命令调用 `Runtime.exec("cmd /c ...")` 执行批处理文件 |
+| 3 | **硬编码数据库密码** | `HikariCPDataSource.java:11-13` | MySQL root/123456 硬编码在源码中 |
+| 4 | **默认管理员账户** | `sql/Init_Admin_accounts.sql` | 4 个管理员账户密码均为 `admin` (账户类型=4=Admin) |
+| 5 | **Python eval() 代码注入** | `scripts/npc/` 中 9 个文件 | 使用 `eval(sm.getXxx())` 解析服务器返回数据，本风险较低（数据源为服务端）但非最佳实践 |
+
+### 🟡 中危风险
+
+| # | 类型 | 位置 | 说明 |
+|---|------|------|------|
+| 1 | **反射获取 Unsafe** | `ClassSizeChecker.java:14-28` | 通过 `setAccessible(true)` 获取 `sun.misc.Unsafe`，虽用于计算对象尺寸，但 Unsafe 可做任意内存操作 |
+| 2 | **SSRF 风险** | `HttpUtil.java:14-57` | HTTP POST 工具方法未对 URL 做白名单校验 |
+| 3 | **硬编码邮箱凭据** | `UserModule.java:12-13` | 邮箱密码占位符 (`example_password`)，若替换为真实密码则暴露凭据 |
+| 4 | **Python/JavaScript 脚本引擎** | `ScriptManagerImpl.java`, `PyScriptEngineWrap.java`, `JsScriptEngineWrap.java` | 脚本引擎执行外部脚本文件，如果路径可被用户控制则是 RCE 向量 |
+| 5 | **权限提升渠道** | `scripts/npc/farm_coin.py:12,33,51` | `allowedChars` 白名单机制可控制摸刷怪/杀怪功能 |
+| 6 | **Web API 暴露** | `WebApi.java` port 3000 | 12 个 REST 端点，需正确配置 nginx 反向代理 |
+
+### 🟢 低风险 / 信息性
+
+- **本地管理员自动登录**: `LoginAcceptor.java:58-60` 从 127.0.0.1 连接自动开启 DEBUG 模式
+- **Nashorn JS eval**: `SkillInfo.java:49,163` 使用 JavaScript 引擎解析 WZ 技能公式
+- **未使用的 JS 引擎**: 项目中无 `.js` 文件，但 `JsScriptEngineWrap.java` 已编译集成
+- **硬编码 GBK 编码**: `ServerConstants.java:33` 使用 GBK 而非 UTF-8
+- **依赖问题**: `pom.xml` 中 `nashorn-core` 重复声明两次(版本 15.7 和 15.3)，不影响安全
+- **客户端**: `client/v232.exe` 是 .NET 游戏客户端 (277KB)，预期之内
+
+### 未发现项 ✅
+
+| 类型 | 结果 |
+|------|------|
+| 恶意病毒/木马/蠕虫 | **未发现** |
+| 时间炸弹/逻辑炸弹 | **未发现** — 所有时间相关代码均为游戏正常功能 |
+| 混淆/加密后门 | **未发现** — 无 base64 编码命令、XOR 加密载荷 |
+| 网络外连到可疑域名 | **未发现** — 仅连接 Google reCAPTCHA、Nexon CDN、localhost |
+| 原生库/DLL 注入 | **未发现** — 无 `.so`/`.dll`/`.dylib` 文件 |
+| 反序列化漏洞 | **未发现** — 无 `readObject()`/`ObjectInputStream` |
+| SQL 注入 | **未发现** — 全部使用 `PreparedStatement` |
+| 文件篡改/删除后门 | **未发现** |
+| 隐藏 Git 历史 | **未发现** — 30 个提交均为正常开发提交 |
+
+### 核心建议
+
+1. **立即修复认证绕过** (`LoginHandler.java:202-216`) — 这是最严重的"暗桩"，建议加编译开关或在生产环境删除此代码段
+2. **将凭据移出源码** — DB密码、邮件密码、reCAPTCHA密钥应使用环境变量或配置文件
+3. **删除或加固 `@pull` 命令** — 用纯 Java 实现 (JGit) 替代 `Runtime.exec()`
+4. **删除默认管理员账号** — 生产环境不应使用 `admin/admin` 账户
+5. **替换 Python `eval()` 为 `ast.literal_eval()`** 或使用 JSON 序列化
+
+**总结**: 本项目**没有发现恶意病毒、木马或故意埋藏的暗桩**。主要风险来源于开发调试遗留的本地认证绕过、硬编码凭据等**配置安全**问题，以及脚本引擎等**架构设计**风险。建议按上述优先级依次修复。
