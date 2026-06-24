@@ -29,6 +29,7 @@ import net.swordie.ms.world.TransferInfo;
 import net.swordie.ms.world.field.Field;
 import net.swordie.ms.world.field.Portal;
 import net.swordie.ms.world.shop.cashshop.CashShop;
+import net.swordie.ms.ServerConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,6 +130,15 @@ public class MigrationHandler {
         chr.setInstance(null);
 
         Field field = chr.getOrCreateFieldByCurrentInstanceType(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
+        if (field == null) {
+            field = chr.getOrCreateFieldByCurrentInstanceType(ServerConfig.DEFAULT_fieldID);
+        }
+        if (field == null) {
+            log.error("Could not find field {} or fallback {} for character {}, closing connection",
+                    chr.getFieldID(), ServerConfig.DEFAULT_fieldID, chr.getId());
+            c.close();
+            return;
+        }
 
         if (Server.OPCODE_ENCRYPTION) {
             c.sendOpcodeEncryption();

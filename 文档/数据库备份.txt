@@ -1,0 +1,21 @@
+已创建两个脚本：
+
+db_export.sh    一键导出
+./db_export.sh                     # 导出为 backup_gms232_日期.sql
+./db_export.sh mybackup.sql        # 指定文件名
+
+db_import.sh    一键恢复（会覆盖现有数据）
+./db_import.sh backup_gms232_20260624_162500.sql
+
+默认连接配置（均可通过环境变量覆盖）：
+- 数据库：`gms232`，主机 `127.0.0.1:3306`
+- 用户/密码：`root / root`
+
+如需自定义连接信息，执行前设置环境变量即可：
+DB_URL="jdbc:mysql://其他IP:3306/gms232" DB_USER=myuser DB_PASS=mypass ./db_export.sh
+
+脚本默认保存在**当前执行目录**。如果你在项目根目录运行：
+cd /home/ltj/MapleStory/GitCola/gms-232
+./db_export.sh
+
+导出的.sql文件就在/home/ltj/MapleStory/GitCola/gms-232/下。

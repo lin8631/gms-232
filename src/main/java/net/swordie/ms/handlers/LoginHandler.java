@@ -612,6 +612,7 @@ public class LoginHandler {
             Server.getInstance().removeCharsByUser(user);
             c.getUser().setCurrentChr(c.getAccount().getCharById(characterId));
             var world = Server.getInstance().getWorldById(worldId);
+            c.getUser().setCurrentWorld(world);
             world.getChannelById(channelId).addClientInTransfer(null, channel, characterId, c);
             c.write(Login.selectCharacterResult(LoginType.Success, (byte) 0, channel.getPort(), characterId, world));
         } else {

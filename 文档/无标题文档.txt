@@ -215,3 +215,38 @@ tail -f server.log
 4. **sql/Init_Admin_accounts.sql** — admin/admin1/asura/maigal 密码已改为 bcrypt 哈希值（明文 "admin" 已移除）
 5. **数据库** — 4 个管理员账户密码已更新为 bcrypt 哈希值（实时生效，无需重启）
 6. **重新编译并重启** — 服务器现在运行 PID 63395
+
+
+已对 5 个关键点做了优化，按影响程度排列：
+
+### 1. TransactionLogger 异步批处理（最大瓶颈）
+- `MAX_QUEUE_SIZE` **1 → 500**：之前每捡一个物品就同步写一次 DB，现在攒满 500 条或每 **30 秒定时**才批量写入
+- flush 改为新线程异步执行，不再阻塞捡物主线程
+
+### 2. Field.removeDrop 去掉 synchronized（高竞争场景）
+- `removeDrop` 不再对整个 Field 加锁，`removeLife` 内部自己的 `synchronized` 仍保证线程安全
+- 多人同图捡物不再互相阻塞，高密度刷图场景改善明显
+
+### 3. canHold 去掉全库存深拷贝
+- 原来每次捡物都 `deepCopy` 全部 **7 个背包**（每个 128 格），改为直接检查空格数
+- 减少了大量对象分配和 GC 压力
+
+### 4. sortItemsByIndex 移出 addItem/removeItem 热路径
+- `addItem`、`removeItem`、`removeItems` 不再每次操作都对整个背包排序
+- 排序仅在首次从 DB 加载和主动调用 `getSortedItems` / `getFirstOpenSlot` 时执行
+
+### 5. getFirstOpenSlot 去冗余
+- 去掉了流中重复的 `.sorted()` 操作和 collect 开销，改为简单循环
+
+**注意**：如果之前有旧的 `fields.dat` 导致进游戏空指针的问题，还需要确认 `.dat` 文件是否包含了角色出生地图（100000000 或 931000000）。如果仍有问题，请提供最新的服务端日志。
+
+
+配置说明：
+
+| 输出 | 级别 | 内容 |
+|---|---|---|
+| **控制台** | `INFO+` | 只有常规日志，无任何 DEBUG 包输出 |
+| **logs/app.log** | `INFO+` | 干净的通用日志 |
+| **logs/MOB.log** | `DEBUG` | 仅 `MOB_MOVE` / `MOB_CTRL_ACK` 包日志 |
+
+Root 仍保持 `debug` 级别确保 MOB 日志能捕获，但通过 `ThresholdFilter` 在控制台和 `app.log` 上只放行 `INFO` 及以上级别的日志。后续如需添加其他包类型的日志文件（如 `USER_MOVE.log`），照 `MobFile` 的格式追加即可。

@@ -1,0 +1,68 @@
+指令通过聊天框输入，权限分Player、Tester、GameMaster、Admin四级：
+
+### 普通玩家指令
+| `@help` / `@info` | 帮助信息 |
+| `@check` | 查看角色属性 |
+| `@mobinfo` / `@mi` | 怪物信息 |
+| `@npcinfo` | NPC 信息 |
+| `@reactorinfo` | 反应器信息 |
+| `@checkmap` / `@players` | 当前地图玩家 |
+| `@inspect` | 查看其他玩家信息 |
+| `@lifeinfo` / `@li` | 生命信息 |
+| `@boss` / `@bossinfo` | BOSS 信息 |
+| `@fixquest` / `@fq` | 修复任务 |
+| `@qm` / `@quickmove` / `@boat` | 快速移动 |
+| `@sale` / `@sell` | 出售物品 |
+| `@checkgift` | 检查礼物 |
+
+### Tester 指令
+| `@item` / `@getitem` | 获取物品 |
+| `@job` / `@setjob` | 设置职业 |
+| `@level` / `@setlevel` / `@lvl` / `@lv` | 设置等级 |
+| `@sp` / `@setsp` | 设置技能点 |
+| `@ap` / `@setap` | 设置属性点 |
+| `@mesos` / `@money` | 设置金币 |
+| `@nx` / `@setnx` | 设置 NX |
+| `@goto` | 传送到地图 |
+| `@warphere` | 拉人 |
+| `@spawn` | 刷怪 |
+| `@heal` | 回满血蓝 |
+| `@god` / `@godmode` / `@invincible` | 无敌模式 |
+| `@hide` | 隐身 |
+| `@maxskills` | 满技能 |
+| `@clearinv` | 清空背包 |
+| `@getskill` | 获取技能 |
+| `@lookup` / `@find` | 查找地图/怪物 |
+| `@completequest` | 完成任务 |
+| `@startquest` | 开始任务 |
+| `@removequest` | 移除任务 |
+| `@usects` / `@cts` | 使用冷却时间 |
+| `@setpotential` / `@setpot` | 设置潜能 |
+| `@setflames` / `@flames` | 设置火焰属性 |
+| `@warptouser` / `@warpuser` | 传送到玩家 |
+| `@bosscd` | BOSS 冷却 |
+| `@stats` | 详细属性 |
+| `@savemap` | 保存当前位置 |
+
+### GM / Admin 指令
+| `@npc` / `@spawnnpc` | 刷 NPC |
+| `@givenx` | 给予 NX |
+| `@giveitem` | 给予物品 |
+| `@warpmap` / `@warpfield` | 跳转到地图 |
+| `@pnpc` | 放置 NPC（数据库持久） |
+| `@rnpc` | 移除已放置 NPC |
+| `@hide` | GM 隐身 |
+| `@unstuck` | 卡点自救 |
+| `@warpother` | 传送他人 |
+| `@charinfo` / `@cinfo` | 角色详细信息 |
+| `@baninfo` / `@checkban` | 封禁信息 |
+| `@clearcache` | 清除缓存 |
+| `@reloadscript` / `@rs` | 重载脚本 |
+| `@buffmap` / `@buffme` | 全图增益 |
+| `@fieldeffect` | 地图特效 |
+| `@weather` / `@weathereffect` | 天气效果 |
+| `@pull` | 拉取目标 |
+| `@ownership` | 所有权设置 |
+| `@gift` | 发送礼物 |
+
+使用格式：在聊天框输入 `@指令名` 即可，如 `@item 1000000 1`。

@@ -20,6 +20,7 @@ import net.swordie.ms.enums.ChatType;
 import net.swordie.ms.handlers.executors.EventManager;
 import net.swordie.ms.life.Familiar;
 import net.swordie.ms.loaders.*;
+import net.swordie.ms.logging.TransactionLogger;
 import net.swordie.ms.scripts.ScriptManagerImpl;
 import net.swordie.ms.util.ErrorLogger;
 import net.swordie.ms.util.FileTime;
@@ -136,6 +137,7 @@ public class Server extends Properties {
 		new Thread(new ApiAcceptor()).start();
 		new Thread(new LoginAcceptor()).start();
 		loadAndAddWorlds();
+        TransactionLogger.startBackgroundFlush();
         long start = System.currentTimeMillis();
         VCoreData.loadVCoreData();
         log.info("Loaded VCore data in " + (System.currentTimeMillis() - start) + "ms");

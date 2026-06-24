@@ -846,7 +846,7 @@ public class Field {
         life.broadcastLeavePacket();
     }
 
-    public synchronized void removeDrop(int dropID, int pickupUserID, boolean fromSchedule, int petID) {
+    public void removeDrop(int dropID, int pickupUserID, boolean fromSchedule, int petID) {
         Life life = getLifeByObjectID(dropID);
         if (life instanceof Drop) {
             if (petID >= 0) {

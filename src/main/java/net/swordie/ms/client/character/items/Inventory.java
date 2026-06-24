@@ -85,7 +85,6 @@ public class Inventory {
             item.setInventory(this);
             getItems().add(item);
             item.setInvType(getType());
-            sortItemsByIndex();
         }
     }
 
@@ -96,7 +95,6 @@ public class Inventory {
     public void removeItem(Item item, boolean addToRemovedItems) {
         getItems().remove(item);
         item.setInventory(null);
-        sortItemsByIndex();
 
         if (addToRemovedItems) {
             chr.addRemovedItem(item);
@@ -106,7 +104,6 @@ public class Inventory {
     public void removeItems(List<Item> items, boolean addToRemovedItems) {
         getItems().removeAll(items);
         items.forEach(i -> i.setInventory(null));
-        sortItemsByIndex();
 
         if (addToRemovedItems) {
             chr.getRemovedItems().addAll(items);
@@ -115,10 +112,11 @@ public class Inventory {
 
     public int getFirstOpenSlotInItemList(List<Item> items) {
         int oldIndex = 0;
-        sortItemsByIndex();
-        for (Item item : items.stream().filter(Item::isNotInBag).sorted(Comparator.comparingInt(Item::getBagIndex)).collect(Collectors.toList())) {
+        for (Item item : items) {
+            if (!item.isNotInBag()) {
+                continue;
+            }
             if (item.getBagIndex() - oldIndex > 1) {
-                // there's a gap between 2 consecutive items
                 break;
             }
             oldIndex = item.getBagIndex();
@@ -128,10 +126,15 @@ public class Inventory {
 
     public int getFirstOpenSlot() {
         int oldIndex = 0;
-        sortItemsByIndex();
-        for (Item item : getItems().stream().filter(Item::isNotInBag).sorted(Comparator.comparingInt(Item::getBagIndex)).collect(Collectors.toList())) {
+        var sorted = getItems();
+        if (!sorted.isEmpty()) {
+            sortItemsByIndex();
+        }
+        for (Item item : sorted) {
+            if (!item.isNotInBag()) {
+                continue;
+            }
             if (item.getBagIndex() - oldIndex > 1) {
-                // there's a gap between 2 consecutive items
                 break;
             }
             oldIndex = item.getBagIndex();

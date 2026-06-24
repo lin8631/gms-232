@@ -2216,6 +2216,9 @@ public class Char {
      * @param toField The field to warp to.
      */
     public void warp(Field toField) {
+        if (toField == null) {
+            return;
+        }
         warp(toField, toField.getInfo().getPortalByName("sp"), false);
     }
 
@@ -2228,6 +2231,9 @@ public class Char {
     public void warp(Field toField, boolean characterData) {
         if (toField == null) {
             toField = getOrCreateFieldByCurrentInstanceType(ServerConfig.DEFAULT_fieldID);
+        }
+        if (toField == null) {
+            return;
         }
         warp(toField, toField.getInfo().getPortalByName("sp"), characterData);
     }
@@ -4172,49 +4178,22 @@ public class Char {
     }
 
     /**
-     * Recursive function that checks if this Char can hold a list of items in their inventory.
+     * Checks if this Char can hold a list of items in their inventory.
      *
      * @param items the list of items this char should be able to hold
      * @return whether or not this Char can hold the list of items
      */
     public boolean canHold(List<Item> items) {
-        return canHold(items, deepCopyForInvCheck());
-    }
-
-    private boolean canHold(List<Item> items, Char deepCopiedChar) {
-        // explicitly use a Char param to avoid accidentally adding items
-        if (items.size() == 0) {
-            return true;
+        for (Item item : items) {
+            if (!canHoldItem(item.getItemId(), item.getQuantity())) {
+                return false;
+            }
+            Inventory inv = getInventoryByType(item.getInvType());
+            if (inv.getEmptySlots() < 1) {
+                return false;
+            }
         }
-
-        Item item = items.get(0);
-        if (canHoldItem(item.getItemId(), item.getQuantity())) {
-            Inventory inv = deepCopiedChar.getInventoryByType(item.getInvType());
-
-            //Can't have an early out, because items can be part of multiple inventories
-            /*if (inv.getEmptySlots() >= items.size()) {
-                return true;
-            }*/
-
-            inv.addItem(item);
-            items.remove(item);
-            return deepCopiedChar.canHold(items, deepCopiedChar);
-        } else {
-            return false;
-        }
-
-    }
-
-    private Char deepCopyForInvCheck() {
-        Char chr = new Char();
-        chr.setEquippedInventory(getEquippedInventory().deepCopy());
-        chr.setEquipInventory(getEquipInventory().deepCopy());
-        chr.setConsumeInventory(getConsumeInventory().deepCopy());
-        chr.setEtcInventory(getEtcInventory().deepCopy());
-        chr.setInstallInventory(getInstallInventory().deepCopy());
-        chr.setCashInventory(getCashInventory().deepCopy());
-        chr.setDecInventory(getDecInventory().deepCopy());
-        return chr;
+        return true;
     }
 
     /**
