@@ -1,0 +1,217 @@
+GMS232 部署教程
+
+原作发布地址 https://forum.ragezone.com/threads/xmas-release-v232-swordie-source.1257894/
+
+开源地址 https://gitlab.com/swordiemen/swordie-232
+
+Discord https://discord.gg/C6mY8SVKar
+
+功能介绍
+
+    版本 232.2
+    稳定，高峰期可同时容纳约 400 名玩家，无延迟
+    崩溃次数极少
+    实装威尔之前的所有Boss
+    实装所有职业
+    自定义技能更改（数量众多，无法一一列举，请查看 SkillChangeConstants）
+    拍卖行功能齐全
+    神秘之河任务线已实装
+    所有物品升级途径均已实装（卷轴、方块、火焰等）
+    SSB
+    自动魔方
+    社交功能（公会、好友、社交账号等）
+    完整的交易日志功能，以打击 RMT（现金交易）
+
+本地部署
+
+以下教程需要有一定Java开发经验的，不适合纯小白，我默认你已经安装好MySQL数据库了。
+
+    下载客户端文件 https://drive.google.com/drive/folders/12Ol6tlBjiGsuYwIkTBz7jFk1ZZFGRYof 会有很多压缩包（不是分卷），需要你全部解压并合并到同一个目录
+    下载dll文件 https://www.mediafire.com/file/v742p25aimk1n8u/Swordie-client-files.zip/file 解压后放入到客户端目录（其中的Sword可以后期自行编译）
+    将服务端项目（见开源地址）拷贝到本地后用idea加载（idea会自动安装依赖，或者你自己进入Maven模块手动安装一下）
+    在服务端根目录下创建wz文件夹，将客户端里的wz文件复制到这个文件夹里（或者修改ServerConstants里wz的目录为客户端目录）
+    创建数据库swrodie232，然后根据下列顺序，依次将服务端sql目录下的sql文件导入到数据库（子目录不需要）
+        InitTables_characters.sql
+        InitTables_indexes.sql
+        InitTables_MonsterCollection.sql
+        Init_Admin_accounts.sql
+        InitTable_equip_drops.sql
+        InitTable_npc.sql
+        InitTables_cashshop.sql
+        InitTables_drops.sql
+        InitTables_shops.sql
+        Init_Migration_at_V79.sql
+
+（可选）你可以在HikariCPDataSource修改数据库连接配置
+
+完成上面的步骤后，运行src/main/java/net/swordie/ms/Server.java即可启动服务端，第一次启动会比较慢
+
+如果发现地图没有怪物的话，重新启动一下服务端就好了
+---------------------------------------------------------------
+已改回 `WZ_DIR = DIR + "/wz"`，服务端重启成功（PID 59274，2.5s 加载完毕），DAT 缓存已足够运行，不再依赖客户端 WZ 文件。
+
+---------------------------------------------------------
+删除 `dat/` 目录即可触发下次启动时重新生成：
+
+```bash
+# 删除全部 DAT 缓存（下次启动自动从 WZ 重新生成）
+rm -rf /home/ltj/MapleStory/GitCola/gms-232/dat/*
+
+# 编译构建
+cd /home/ltj/MapleStory/GitCola/gms-232 && mvn clean package -DskipTests
+
+# 启动服务端
+setsid java -jar bin/maplestory-1.77.3.jar > /tmp/server.log 2>&1 &
+```
+
+> ⚠️ 首次生成全部 DAT 缓存较慢（几分钟），之后启动只需 2-3 秒。
+
+--------------------------------------------------------
+已完成。脚本位于 `start.sh`，支持以下功能：
+
+| 操作 | 命令 |
+|------|------|
+| **启动** | `./start.sh` |
+| **停止** | `kill $(cat server.pid)` |
+| **查看日志** | `tail -f server.log` |
+| **重启** | `kill $(cat server.pid) && ./start.sh` |
+
+首次启动前需编译：`mvn clean package -DskipTests`。
+
+
+-------------------------------------------------
+服务端确实已在运行：
+
+- **PID**: 60038
+- **端口**: 8484 (Login)、8483 (API)、12985 (Channel)、3000 (Web API)
+- **类型**: 纯控制台后台进程（无界面、无窗口）
+
+你之前运行 `./start.sh` 时它检测到该进程已在运行，所以直接提示退出。
+
+直接 `tail -f server.log` 就能看到实时日志。
+
+
+
+脚本逻辑没问题——确实有旧进程 (PID 60038) 在运行。帮你确认一下当前状态：
+
+$ ps aux | grep maplestory | grep -v grep; echo "---"; ss -tlnp | grep -E "8484|8483|12985|3000" | awk '{print $4, $5}'
+
+ltj        60038  5.6  2.4 5625080 181884 ?      Sl   20:48   0:10 java -jar /home/ltj/MapleStory/GitCola/gms-232/bin/maplestory-1.77.3.jar
+---
+*:12985 *:*
+*:8483 *:*
+*:8484 *:*
+*:3000 *:*
+服务端确实已在运行：
+
+PID: 60038
+端口: 8484 (Login)、8483 (API)、12985 (Channel)、3000 (Web API)
+类型: 纯控制台后台进程（无界面、无窗口）
+你之前运行 ./start.sh 时它检测到该进程已在运行，所以直接提示退出。直接 tail -f server.log 就能看到实时日志。
+
+
+
+脚本逻辑没问题——确实有旧进程 (PID 60038) 在运行。帮你确认一下当前状态：
+
+$ ps aux | grep maplestory | grep -v grep; echo "---"; ss -tlnp | grep -E "8484|8483|12985|3000" | awk '{print $4, $5}'
+
+ltj        60038  5.6  2.4 5625080 181884 ?      Sl   20:48   0:10 java -jar /home/ltj/MapleStory/GitCola/gms-232/bin/maplestory-1.77.3.jar
+---
+*:12985 *:*
+*:8483 *:*
+*:8484 *:*
+*:3000 *:*
+服务端确实已在运行：
+
+PID: 60038
+端口: 8484 (Login)、8483 (API)、12985 (Channel)、3000 (Web API)
+类型: 纯控制台后台进程（无界面、无窗口）
+你之前运行 ./start.sh 时它检测到该进程已在运行，所以直接提示退出。直接 tail -f server.log 就能看到实时日志。
+
+如果确实要重新启动：
+
+kill $(cat server.pid) && sleep 2 && ./start.sh
+
+
+服务端是无头的 (headless)，纯控制台 Java 程序，没有界面。它通过 nohup 在后台运行，所有日志输出到 server.log。
+
+刚才报"已在运行"是因为我测试时启动的进程 (PID 60038) 还在。你可以这样确认它是否真的在运行：
+
+# 查看进程
+ps aux | grep maplestory
+
+# 查看监听端口
+ss -tlnp | grep -E "8484|8483|12985|3000"
+
+# 实时查看日志
+tail -f server.log
+
+=============================================
+## Goal
+- 架设并运行 MapleStory gms-232 私服服务端，完成编译构建、数据库初始化、启动运行
+
+## Constraints & Preferences
+- JDK 21、MySQL 8.4、Maven 3.9.9
+- 服务端为 headless（无界面），纯后台 Java 进程
+- 使用项目内 `wz/` 目录，DAT 缓存已生成后不再依赖客户端 WZ 文件
+- 单频道模式（maxChannels=1）
+- WZ 源文件路径：`/home/ltj/MapleStory/Client/Maplestory V232.2/`
+- MySQL root 密码：root，端口 3306，数据库名 gms232
+- 脚本应显示启动日志直至 "Finished loading server"
+
+## Progress
+### Done
+- 完成安全审查：未发现恶意病毒/后门/暗桩，但发现认证绕过（LoginHandler.java 127.0.0.1 自动登录）、硬编码凭据、默认 admin/admin 账户等安全隐患
+- 将三个世界配置（Aurora/Bera/Reboot）的 maxChannels 改为 1（单频道），注释移到独立行
+- 修改 HikariCPDataSource.java：jdbc 端口 3308→3306，数据库名 swordie232→gms232，密码 123456→root
+- 修改 ServerConstants.java：WZ_DIR 从项目内 `wz/` 指向 `/home/ltj/MapleStory/Client/Maplestory V232.2`（后改回项目内路径）
+- 创建 gms232 数据库并导入所有 InitTable_*.sql、Init_Migration_at_V79.sql、Init_Admin_accounts.sql（4 个管理员账户 admin/admin）
+- `mvn clean package -DskipTests` 编译构建成功，生成 96MB fat JAR
+- 服务端运行成功：端口 8484（Login）、8483（API）、12985（Channel Reboot-1）、3000（Web API）
+- DAT 缓存文件首次生成后改为引用项目内 `wz/` 目录（WZ_DIR = DIR + "/wz"），不再需要客户端 WZ
+- 编写 start.sh，启动后实时输出日志，等待 "Finished loading server" 后自动退出 tail 并显示启动完成提示
+
+### In Progress
+- （无）
+
+### Blocked
+- （无）
+
+## Key Decisions
+- 数据库端口和名称改为匹配本机 MySQL（3306/gms232），密码 root
+- WZ_DIR 使用绝对路径指向客户端目录用于首次生成 DAT 缓存，之后改回项目内 `wz/` 目录
+- 启动脚本使用 `nohup + tail -f + 等待 Finished loading server` 模式，兼顾后台运行和日志可见性
+
+## Next Steps
+- 测试客户端连接 127.0.0.1:8484
+- 修改默认管理员密码（admin/admin）
+- 移除或关闭 LoginHandler.java:202-216 的本地认证绕过后门（production 环境必需）
+- 将 MySQL 密码从硬编码移入配置文件或环境变量
+
+## Critical Context
+- 数据库连接：`jdbc:mysql://127.0.0.1:3306/gms232`
+- 服务端启动成功标志：`Finished loading server in ~2500ms. Version: 232.2`
+- 服务 PID 记录在 `server.pid`，日志在 `server.log`
+- 服务器编码为 GBK（ServerConstants.java:33）
+- Login 端口 8484，Channel 端口 12985
+- 数据库默认管理员：admin/admin（accounttype=4 表示 Admin）
+- 当前运行中 PID 为最后一次重启后的进程
+
+## Relevant Files
+- `src/main/java/net/swordie/orm/connection/HikariCPDataSource.java`：数据库连接配置（端口 3306，库 gms232，密码 root）
+- `src/main/java/net/swordie/ms/ServerConstants.java`：服务端常量（端口、目录路径、WZ_DIR、编码 GBK）
+- `src/main/java/net/swordie/ms/handlers/LoginHandler.java:202-216`：本地 127.0.0.1 认证绕过（安全隐患）
+- `resources/world/Reboot.properties`：当前启用的世界配置（单频道）
+- `sql/Init_Admin_accounts.sql`：4 个默认管理员账户
+- `start.sh`：服务端启动脚本
+- `bin/maplestory-1.77.3.jar`：编译产物（96MB fat JAR）
+
+
+所有任务完成。变更摘要：
+
+1. **LoginHandler.java** — 移除 `127.0.0.1` 认证绕过后门（第 202-217 行），现在所有连接必须输入密码
+2. **HikariCPDataSource.java** — 数据库凭据通过环境变量 (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`) 读取，保留硬编码兜底
+3. **start.sh** — 启动时自动加载 `.env` 文件（若存在）；已创建 `.env` 并添加至 `.gitignore`
+4. **sql/Init_Admin_accounts.sql** — admin/admin1/asura/maigal 密码已改为 bcrypt 哈希值（明文 "admin" 已移除）
+5. **数据库** — 4 个管理员账户密码已更新为 bcrypt 哈希值（实时生效，无需重启）
+6. **重新编译并重启** — 服务器现在运行 PID 63395

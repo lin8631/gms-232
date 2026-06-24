@@ -467,70 +467,78 @@ public class FieldData {
     }
 
     private static void loadCustomNpcs() {
-        PlacedNpcTemplateDao templateDao = (PlacedNpcTemplateDao) SworDaoFactory.getByClass(PlacedNpcTemplate.class);
-        List<PlacedNpcTemplate> templates = templateDao.getAll();
-        log.info("Loading {} placed NPC templates from database...", templates.size());
-        for (PlacedNpcTemplate template : templates) {
-            int mapId = template.getMapid();
-            FieldInfo field = getFields().get(mapId);
-            if (field == null) {
-                log.warn("Cannot add placed NPC template {} - field {} not found", template.getId(), mapId);
-                continue;
+        try {
+            PlacedNpcTemplateDao templateDao = (PlacedNpcTemplateDao) SworDaoFactory.getByClass(PlacedNpcTemplate.class);
+            List<PlacedNpcTemplate> templates = templateDao.getAll();
+            log.info("Loading {} placed NPC templates from database...", templates.size());
+            for (PlacedNpcTemplate template : templates) {
+                int mapId = template.getMapid();
+                FieldInfo field = getFields().get(mapId);
+                if (field == null) {
+                    log.warn("Cannot add placed NPC template {} - field {} not found", template.getId(), mapId);
+                    continue;
+                }
+                Life life = new Life(template.getNpcid());
+                life.setLifeType("n");
+                life.setTemplateId(template.getNpcid());
+                life.setX(template.getX());
+                life.setY(template.getY());
+                life.setCy(template.getCy());
+                life.setRx0(template.getRx0());
+                life.setRx1(template.getRx1());
+                life.setFh(template.getFh());
+                life.setPosition(new Position(template.getX(), template.getY()));
+                field.addLife(life);
+                log.debug("Added placed NPC template {} (NPC ID: {}) to field {}", template.getId(), template.getNpcid(), mapId);
             }
-            Life life = new Life(template.getNpcid());
-            life.setLifeType("n");
-            life.setTemplateId(template.getNpcid());
-            life.setX(template.getX());
-            life.setY(template.getY());
-            life.setCy(template.getCy());
-            life.setRx0(template.getRx0());
-            life.setRx1(template.getRx1());
-            life.setFh(template.getFh());
-            life.setPosition(new Position(template.getX(), template.getY()));
-            field.addLife(life);
-            log.debug("Added placed NPC template {} (NPC ID: {}) to field {}", template.getId(), template.getNpcid(), mapId);
+            log.info("Loaded {} placed NPC templates into fields", templates.size());
+        } catch (Throwable e) {
+            log.error("Failed to load placed NPC templates, skipping", e);
         }
-        log.info("Loaded {} placed NPC templates into fields", templates.size());
     }
 
     private static void removeConfiguredNpcs() {
-        RemovedNpcTemplateDao templateDao = (RemovedNpcTemplateDao) SworDaoFactory.getByClass(RemovedNpcTemplate.class);
-        List<RemovedNpcTemplate> templates = templateDao.getAll();
-        log.info("Loading {} removed NPC templates from database...", templates.size());
-        
-        Map<Integer, Set<Integer>> removalsByMap = new HashMap<>();
-        for (RemovedNpcTemplate template : templates) {
-            removalsByMap.computeIfAbsent(template.getMapid(), k -> new HashSet<>()).add(template.getNpcid());
-        }
-        
-        int totalRemoved = 0;
-        
-        for (Map.Entry<Integer, Set<Integer>> entry : removalsByMap.entrySet()) {
-            int mapId = entry.getKey();
-            Set<Integer> npcIdsToRemove = entry.getValue();
-            
-            FieldInfo field = getFields().get(mapId);
-            if (field == null) {
-                log.warn("Cannot remove NPCs {} from map {} - field not found", npcIdsToRemove, mapId);
-                continue;
+        try {
+            RemovedNpcTemplateDao templateDao = (RemovedNpcTemplateDao) SworDaoFactory.getByClass(RemovedNpcTemplate.class);
+            List<RemovedNpcTemplate> templates = templateDao.getAll();
+            log.info("Loading {} removed NPC templates from database...", templates.size());
+
+            Map<Integer, Set<Integer>> removalsByMap = new HashMap<>();
+            for (RemovedNpcTemplate template : templates) {
+                removalsByMap.computeIfAbsent(template.getMapid(), k -> new HashSet<>()).add(template.getNpcid());
             }
-            
-            var lifes = field.getLifes();
-            var iterator = lifes.entrySet().iterator();
-            while (iterator.hasNext()) {
-                var lifeEntry = iterator.next();
-                Life life = lifeEntry.getValue();
-                
-                if ("n".equalsIgnoreCase(life.getLifeType()) && 
-                    npcIdsToRemove.contains(life.getTemplateId())) {
-                    iterator.remove();
-                    totalRemoved++;
-                    log.info("Removed NPC {} from map {}", life.getTemplateId(), mapId);
+
+            int totalRemoved = 0;
+
+            for (Map.Entry<Integer, Set<Integer>> entry : removalsByMap.entrySet()) {
+                int mapId = entry.getKey();
+                Set<Integer> npcIdsToRemove = entry.getValue();
+
+                FieldInfo field = getFields().get(mapId);
+                if (field == null) {
+                    log.warn("Cannot remove NPCs {} from map {} - field not found", npcIdsToRemove, mapId);
+                    continue;
+                }
+
+                var lifes = field.getLifes();
+                var iterator = lifes.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    var lifeEntry = iterator.next();
+                    Life life = lifeEntry.getValue();
+
+                    if ("n".equalsIgnoreCase(life.getLifeType()) &&
+                        npcIdsToRemove.contains(life.getTemplateId())) {
+                        iterator.remove();
+                        totalRemoved++;
+                        log.info("Removed NPC {} from map {}", life.getTemplateId(), mapId);
+                    }
                 }
             }
+
+            log.info("Total NPCs removed by database configuration: {}", totalRemoved);
+        } catch (Throwable e) {
+            log.error("Failed to remove configured NPCs, skipping", e);
         }
-        
-        log.info("Total NPCs removed by database configuration: {}", totalRemoved);
     }
 
     private static FieldInfo getFieldFromFile(int id) {
@@ -783,11 +791,19 @@ public class FieldData {
 
         log.info("Started generating field data.");
         long start = System.currentTimeMillis();
-        loadFieldInfoFromWz();
+        try {
+            loadFieldInfoFromWz();
+        } catch (Throwable e) {
+            log.error("Failed to load field info from WZ, skipping", e);
+        }
         loadCustomNpcs();
         removeConfiguredNpcs();
         saveFields(FIELDS_FILE);
-        loadWorldMapFromWz();
+        try {
+            loadWorldMapFromWz();
+        } catch (Throwable e) {
+            log.error("Failed to load world map from WZ, skipping", e);
+        }
         saveWorldMap(ServerConstants.DAT_DIR + "/worldMap.dat");
         log.info(String.format("Completed generating field data in %dms.", System.currentTimeMillis() - start));
     }

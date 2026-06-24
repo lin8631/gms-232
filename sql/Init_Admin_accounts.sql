@@ -1,8 +1,8 @@
 insert into `users` (`name`, `password`, `accounttype`, `chatunblockdate`, `pic`, `characterslots`)
-values ('admin', 'admin', '4', '0', '111111', '40');
+values ('admin', '\$2a\$05\$nUXNCGxtcITF2wrp/bOZ4OqesRq8VAJ1ynAcXaDpb3klZo4DYbFTC', '4', '0', '111111', '40');
 insert into `users` (`name`, `password`, `accounttype`, `chatunblockdate`, `pic`, `characterslots`)
-values ('admin1', 'admin', '4', '0', '111111', '40');
+values ('admin1', '\$2a\$05\$nUXNCGxtcITF2wrp/bOZ4OqesRq8VAJ1ynAcXaDpb3klZo4DYbFTC', '4', '0', '111111', '40');
 insert into `users` (`name`, `password`, `accounttype`, `chatunblockdate`, `pic`, `characterslots`)
-values ('asura', 'admin', '4', '0', '111111', '40');
+values ('asura', '\$2a\$05\$nUXNCGxtcITF2wrp/bOZ4OqesRq8VAJ1ynAcXaDpb3klZo4DYbFTC', '4', '0', '111111', '40');
 insert into `users` (`name`, `password`, `accounttype`, `chatunblockdate`, `pic`, `characterslots`)
-values ('maigal', 'admin', '4', '0', '111111', '40');
+values ('maigal', '\$2a\$05\$nUXNCGxtcITF2wrp/bOZ4OqesRq8VAJ1ynAcXaDpb3klZo4DYbFTC', '4', '0', '111111', '40');

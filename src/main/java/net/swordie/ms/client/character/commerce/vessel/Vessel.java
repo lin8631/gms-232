@@ -109,11 +109,15 @@ public class Vessel implements Encodable {
     }
 
     public int getMaxEnergy() {
-        return EtcData.getVesselInfoById(getVesselType().getVal()).getEnergy();
+        var info = EtcData.getVesselInfoById(getVesselType().getVal());
+        if (info == null) return 100;
+        return info.getEnergy();
     }
 
     public int getLevelUpExpReq() {
-        return EtcData.getVesselExpRequirement(getLevel() + 1, getVesselType().getVal());
+        int req = EtcData.getVesselExpRequirement(getLevel() + 1, getVesselType().getVal());
+        if (req <= 0) return 1000;
+        return req;
     }
 
     public void upgrade() {

@@ -298,7 +298,7 @@ public class GameConstants {
     public static final String DEFAULT_SHOP_SCRIPT = "unknown_shop";
     public static final double MAX_PET_DROP_PICKUP_DIST = 350;
     public static final long MAX_AUCTION_QUERY_RESULT_SIZE = 150;
-    public static final byte[] SERVER_IP = new byte[]{54, 68, (byte) 160, 34};
+    public static final byte[] SERVER_IP = new byte[]{(byte) 192, (byte) 168, 31, (byte) 204};
 
     public static final long PARTY_QUEST_EXP_FORMULA(Char chr) {
         // Exp formula for giving Exp from Party Quests

@@ -199,22 +199,6 @@ public class LoginHandler {
 
         byte code = 0; // success code
         User user;
-        boolean localIP = c.getIP().equalsIgnoreCase("127.0.0.1");
-        if (localIP && userId == 0) {
-            userId = 1;
-            user = userDao.getById(userId);
-            if (Server.getInstance().isUserLoggedIn(user)) {
-                userId = 2;
-            }
-            user = userDao.getById(userId);
-            if (Server.getInstance().isUserLoggedIn(user)) {
-                userId = 3;
-            }
-            user = userDao.getById(userId);
-            if (Server.getInstance().isUserLoggedIn(user)) {
-                userId = 1;
-            }
-        }
         if (userId != 0) {
             user = userDao.getById(userId);
             if (user == null) {

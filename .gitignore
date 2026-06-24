@@ -102,3 +102,4 @@ logs/clienterror.txt
 logs/timeinfo.csv
 letsencrypt.jks
 tespia_scripts/
+.env
