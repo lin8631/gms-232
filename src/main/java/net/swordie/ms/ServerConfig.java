@@ -122,6 +122,8 @@ public class ServerConfig {
             MIND_BREAK_FD_MULTIPLIER = parseInt(props, "server.mindBreakFdMultiplier", MIND_BREAK_FD_MULTIPLIER);
             ELITE_CHAMPION_MIN_DMG_RATIO_FOR_REWARD = parseInt(props, "server.eliteChampionMinDmgRatioForReward", ELITE_CHAMPION_MIN_DMG_RATIO_FOR_REWARD);
 
+            SHOW_LEVEL_UP_EFFECT = parseBoolean(props, "server.showLevelUpEffect", SHOW_LEVEL_UP_EFFECT);
+
             DEFAULT_fieldID = parseInt(props, "server.defaultFieldID", DEFAULT_fieldID);
 
             log.info("Loaded server config from {}", CONFIG_FILE);
@@ -144,6 +146,10 @@ public class ServerConfig {
 
     private static float parseFloat(Properties props, String key, float def) {
         return Float.parseFloat(props.getProperty(key, String.valueOf(def)));
+    }
+
+    private static boolean parseBoolean(Properties props, String key, boolean def) {
+        return Boolean.parseBoolean(props.getProperty(key, String.valueOf(def)));
     }
 
     // --- Non-configurable constants ---
@@ -271,6 +277,9 @@ public class ServerConfig {
     public static int ADVANCED_TILES_DURATION_MULTIPLIER = 2;
     public static int MIND_BREAK_FD_MULTIPLIER = 3;
     public static int ELITE_CHAMPION_MIN_DMG_RATIO_FOR_REWARD = 3;
+
+    // --- Display options ---
+    public static boolean SHOW_LEVEL_UP_EFFECT = true;
 
     // --- Map fallback ---
     public static int DEFAULT_fieldID = 100000000;

@@ -2740,7 +2740,9 @@ public class Char {
                 getJobHandler().handleLevelUp();
             }
             level++;
-            getField().broadcastPacket(UserRemote.effect(getId(), Effect.levelUpEffect()));
+            if (ServerConfig.SHOW_LEVEL_UP_EFFECT) {
+                getField().broadcastPacket(UserRemote.effect(getId(), Effect.levelUpEffect()));
+            }
             heal(getMaxHP());
             healMP(getMaxMP());
 
@@ -7655,7 +7657,9 @@ public class Char {
             stats.put(Stat.exp, (long) 0);
             write(WvsContext.statChanged(stats));
             getJobHandler().handleLevelUp();
-            getField().broadcastPacket(UserRemote.effect(getId(), Effect.levelUpEffect()));
+            if (ServerConfig.SHOW_LEVEL_UP_EFFECT) {
+                getField().broadcastPacket(UserRemote.effect(getId(), Effect.levelUpEffect()));
+            }
         }
     }
 
