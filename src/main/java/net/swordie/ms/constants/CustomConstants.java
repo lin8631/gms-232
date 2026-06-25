@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import net.swordie.ms.ServerConfig;
 import net.swordie.ms.client.jobs.resistance.demon.DemonSlayer;
 import net.swordie.ms.handlers.header.OutHeader;
 import org.apache.logging.log4j.LogManager;
@@ -31,9 +32,9 @@ public class CustomConstants {
         }
     }
     //Buffed mobs
-    public static final int BUFFED_MOB_HP_MULTIPLIER = 1000;
+    public static final int BUFFED_MOB_HP_MULTIPLIER = ServerConfig.BUFFED_MOB_HP_MULTIPLIER;
     public static final int BUFFED_MOB_SCALE = 120; //Default scale is 100
-    public static final int BUFFED_MOB_DAMAGE_MULTIPLIER = 10;
+    public static final int BUFFED_MOB_DAMAGE_MULTIPLIER = ServerConfig.BUFFED_MOB_DAMAGE_MULTIPLIER;
 
     public static final boolean AUTO_AGGRO = false;
     public static final int PET_VAC = 4030003;
@@ -47,10 +48,10 @@ public class CustomConstants {
 
     public static final boolean SSB_AUTOMATIC_ROTATION = true;
 
-    public static final int BOSS_CRYSTAL_PRICE_INCREASE = 0; //percent increase 水晶售賣價格提升倍率
+    public static final int BOSS_CRYSTAL_PRICE_INCREASE = ServerConfig.BOSS_CRYSTAL_PRICE_INCREASE;
     // GML & MLG Exchange
-    public static final int GML_TAX = 10; // 10%
-    public static final int MLG_TAX = 20; // 20%
+    public static final int GML_TAX = ServerConfig.GML_TAX;
+    public static final int MLG_TAX = ServerConfig.MLG_TAX;
     public static final int GML_WORTH = 1_000_000_000; // 1bil meso
     public static final int MLG_WORTH = 1_000_000; // 1mil cash
     public static final int GOLDEN_MAPLE_LEAF = 4000313; // Item ID

@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import net.swordie.ms.ServerConfig;
 import net.swordie.ms.client.character.items.*;
 import net.swordie.ms.client.soulcollection.BossSoulCollectionFlag;
 import net.swordie.ms.client.soulcollection.BossSoulType;
@@ -139,16 +140,16 @@ public class ItemConstants {
 
     static final Logger log = LogManager.getRootLogger();
 
-    public static final int THIRD_LINE_CHANCE = 50;
-    public static final int PRIME_LINE_CHANCE = 15;
+    public static final int THIRD_LINE_CHANCE = ServerConfig.THIRD_LINE_CHANCE;
+    public static final int PRIME_LINE_CHANCE = ServerConfig.PRIME_LINE_CHANCE;
 
     public static final int NEBILITE_BASE_ID = 3060000;
 
-    public static final int NEB_D_PROP = 40;
-    public static final int NEB_C_PROP = 20;
-    public static final int NEB_B_PROP = 15;
-    public static final int NEB_A_PROP = 15;
-    public static final int NEB_S_PROP = 10;
+    public static final int NEB_D_PROP = ServerConfig.NEB_D_PROP;
+    public static final int NEB_C_PROP = ServerConfig.NEB_C_PROP;
+    public static final int NEB_B_PROP = ServerConfig.NEB_B_PROP;
+    public static final int NEB_A_PROP = ServerConfig.NEB_A_PROP;
+    public static final int NEB_S_PROP = ServerConfig.NEB_S_PROP;
 
     // Cash shop
     public static final int SURPRISE_STYLE_BOX = 5222060;

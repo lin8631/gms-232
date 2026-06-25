@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import net.swordie.ms.ServerConfig;
 import net.swordie.ms.util.Position;
 
 /**
@@ -37,7 +38,7 @@ public class BossConstants {
     public static final int LOTUS_HARD_DEATHCOUNT = 5;
 
     //      Falling Foothold
-    public static final int LOTUS_FALLING_FOOTHOLD_CHANCE = 60;  // 60% chance of spawning when MobSkill Used
+    public static final int LOTUS_FALLING_FOOTHOLD_CHANCE = ServerConfig.LOTUS_FALLING_FOOTHOLD_CHANCE;
     public static final int LOTUS_FALLING_FOOTHOLD_WIDTH = 90; // value used for both  left distance & right distance
     public static final int LOTUS_FALLING_FOOTHOLD_DURATION = 10; // 10 seconds
     public static final int LOTUS_FALLING_FOOTHOLD_SHOCK_TERRAIN_DELAY = 2500; // ms  after falling footholds land, will the shock terrain start
@@ -277,7 +278,7 @@ public class BossConstants {
 
     // Chaos
     public static final int HORNTAIL_HARD = 8810122;
-    public static final long HORNTAIL_CHAOS_MULTIPLIER = 4;
+    public static final long HORNTAIL_CHAOS_MULTIPLIER = ServerConfig.HORNTAIL_CHAOS_MULTIPLIER;
     public static final long HORNTAIL_CHAOS_HP = 10_000_000_000L * HORNTAIL_CHAOS_MULTIPLIER; // 40bil
     public static final int CHAOS_HORNTAIL_TIME = 150 * 60; // 2 hrs, 30 min timer
 
@@ -455,7 +456,7 @@ public class BossConstants {
     public static final int[] GOLLUX_RIGHT_HAND_SKILLS = new int[]{3, 5, 6, 8, 10};
     public static final int[] GOLLUX_LEFT_HAND_SKILLS = new int[]{2, 4, 7, 9, 11};
     public static final int GOLLUX_BREATH_ATTACK = 1;
-    public static final int GOLLUX_DROP_STONE_CHANCE = 25;
+    public static final int GOLLUX_DROP_STONE_CHANCE = ServerConfig.GOLLUX_DROP_STONE_CHANCE;
 
     //  Princess No --------------------------------------------------------------------------------------------------------
     public static final int PRINCESS_NO = 9450022;

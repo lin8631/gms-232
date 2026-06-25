@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import net.swordie.ms.ServerConfig;
 import net.swordie.ms.ServerConstants;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.items.Equip;
@@ -19,10 +20,10 @@ import java.util.*;
 public class GameConstants {
     public static final int CHANNELS_PER_WORLD = 3;
     public static final int BUFFED_CHANNELS = CHANNELS_PER_WORLD;
-    public static final int COMBO_ORB_EXP_RATE = 1; // Note: MOB_EXP_RATE does not affect combo orbs
-    public static final int MOB_NX_RATE = 1;
-    public static final int MOB_DROP_RATE = 1;
-    public static final int MOB_MESO_RATE = 2;
+    public static final int COMBO_ORB_EXP_RATE = ServerConfig.COMBO_ORB_EXP_RATE;
+    public static final int MOB_NX_RATE = ServerConfig.MOB_NX_RATE;
+    public static final int MOB_DROP_RATE = ServerConfig.MOB_DROP_RATE;
+    public static final int MOB_MESO_RATE = ServerConfig.MOB_MESO_RATE;
     public static final long MAX_MONEY = 99_999_999_999L;
     public static final short DAMAGE_SKIN_MAX_SIZE = 100;
     public static final int MAX_PET_AMOUNT = 3;
@@ -43,16 +44,16 @@ public class GameConstants {
     public static final int BUFF_FREEZER_TIMER = 30; // 30 seconds
     public static final int USER_REVIVE_TIMER = 5; // 5 seconds
     public static final int DEATH_PENALTY_MAX_DURATION = 30 * 60; // 30min
-    public static final int DEATH_PENALTY_DROP_DEBUFF = 80; // 80% less drop rate
-    public static final int DEATH_PENALTY_EXP_DEBUFF = 80; // 80% less exp
+    public static final int DEATH_PENALTY_DROP_DEBUFF = ServerConfig.DEATH_PENALTY_DROP_DEBUFF;
+    public static final int DEATH_PENALTY_EXP_DEBUFF = ServerConfig.DEATH_PENALTY_EXP_DEBUFF;
 
     // Stats
     public static final int HP_PER_LEVEL = 50;
     public static final int MP_PER_LEVEL = 37;
-    public static final double STR_HP_MULT = 1.5;
-    public static final double STR_MP_MULT = 0.75;
-    public static final double INT_HP_MULT = 0.75;
-    public static final double INT_MP_MULT = 1.5;
+    public static final double STR_HP_MULT = ServerConfig.STR_HP_MULT;
+    public static final double STR_MP_MULT = ServerConfig.STR_MP_MULT;
+    public static final double INT_HP_MULT = ServerConfig.INT_HP_MULT;
+    public static final double INT_MP_MULT = ServerConfig.INT_MP_MULT;
 
     // Field
     public static final int NO_MAP_ID = 999999999;
@@ -61,10 +62,10 @@ public class GameConstants {
     public static final int GUILD_BASE = 200000301;
     public static final int FOREST_OF_TENACITY = 993001000;
     public static final int DEFAULT_FIELD_MOB_CAPACITY = 25;
-    public static final double DEFAULT_FIELD_MOB_RATE_BY_MOBGEN_COUNT = 1.5;
-    public static final int BASE_MOB_RESPAWN_RATE = 5000; // In milliseconds
-    public static final double KISHIN_MOB_MULTIPLIER = 1.7;
-    public static final double KISHIN_MOB_RATE_MULTIPLIER = 1.7;
+    public static final double DEFAULT_FIELD_MOB_RATE_BY_MOBGEN_COUNT = ServerConfig.DEFAULT_FIELD_MOB_RATE_BY_MOBGEN_COUNT;
+    public static final int BASE_MOB_RESPAWN_RATE = ServerConfig.BASE_MOB_RESPAWN_RATE;
+    public static final double KISHIN_MOB_MULTIPLIER = ServerConfig.KISHIN_MOB_MULTIPLIER;
+    public static final double KISHIN_MOB_RATE_MULTIPLIER = ServerConfig.KISHIN_MOB_RATE_MULTIPLIER;
     public static final Rect MOB_CHECK_RECT = new Rect(-100, -100, 100, 100);
     public static final int MIN_LEVEL_FOR_RANDOM_FIELD_OCCURRENCES = 10;
 
@@ -74,9 +75,9 @@ public class GameConstants {
     public static final int DROP_DIFF_FROM_FIELD_BORDER = 25;
     public static final int DROP_REMAIN_ON_GROUND_TIME = 120; // 2 minutes
     public static final int DROP_REMOVE_OWNERSHIP_TIME = 30; // 30 sec
-    public static final int MIN_MONEY_MULT = 20;
-    public static final int MAX_MONEY_MULT = 40;
-    public static final int MAX_DROP_CHANCE = 10000;
+    public static final int MIN_MONEY_MULT = ServerConfig.MIN_MONEY_MULT;
+    public static final int MAX_MONEY_MULT = ServerConfig.MAX_MONEY_MULT;
+    public static final int MAX_DROP_CHANCE = ServerConfig.MAX_DROP_CHANCE;
 
     // Combo Kill
     public static final int COMBO_KILL_RESET_TIMER = 7000; // 7 sec
@@ -86,7 +87,7 @@ public class GameConstants {
     public static final int COMBO_KILL_REWARD_GOLD = 1000; // Combo kills
 
     // Multi Kill
-    public static final float MULTI_KILL_BONUS_EXP_MULTIPLIER = 0.01f; // Multi Kill Bonus Exp given  =  mobEXP * (( multi Kill Amount - 2 ) * 5) * BONUS_EXP_FOR_MULTI_KILL
+    public static final float MULTI_KILL_BONUS_EXP_MULTIPLIER = ServerConfig.MULTI_KILL_BONUS_EXP_MULTIPLIER;
 
     // Aggressive Ranking
     public static final long AGGRESSIVE_RANKING_UPDATE_DELAY = 1000L; // 1000 ms
@@ -94,7 +95,7 @@ public class GameConstants {
     // Inner Ability
     public static final int CHAR_POT_BASE_ID = 70000000;
     public static final int CHAR_POT_END_ID = 70000062;
-    public static final int BASE_CHAR_POT_UP_RATE = 10; // 10%
+    public static final int BASE_CHAR_POT_UP_RATE = ServerConfig.BASE_CHAR_POT_UP_RATE;
     public static final int CHAR_POT_RESET_COST = 100;
     public static final int CHAR_POT_GRADE_LOCK_COST_EPIC = 400; // added cost to lock Epic Grade
     public static final int CHAR_POT_GRADE_LOCK_COST_UNIQUE = 5000; // added cost to lock Unique Grade
@@ -103,9 +104,9 @@ public class GameConstants {
     public static final int CHAR_POT_LOCK_2_COST = 5000;
 
     // Potential Chance on Drop Equips
-    public static final int RANDOM_EQUIP_UNIQUE_CHANCE = 1; // out of a 100
-    public static final int RANDOM_EQUIP_EPIC_CHANCE = 3; // out of a 100
-    public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
+    public static final int RANDOM_EQUIP_UNIQUE_CHANCE = ServerConfig.RANDOM_EQUIP_UNIQUE_CHANCE;
+    public static final int RANDOM_EQUIP_EPIC_CHANCE = ServerConfig.RANDOM_EQUIP_EPIC_CHANCE;
+    public static final int RANDOM_EQUIP_RARE_CHANCE = ServerConfig.RANDOM_EQUIP_RARE_CHANCE;
 
     // BagItem
     public static final int BAG_ITEM_MAX_ETC = 7;
@@ -123,13 +124,13 @@ public class GameConstants {
 
     // Random Portal
     public static final int RANDOM_PORTAL_NEXT_SPAWN_TIME_QUEST_ID = 89999997; // nextTime=X
-    public static final int RANDOM_PORTAL_SPAWN_CHANCE = 25; // out of a 10,000 (0.25%)
+    public static final int RANDOM_PORTAL_SPAWN_CHANCE = ServerConfig.RANDOM_PORTAL_SPAWN_CHANCE;
     public static final int RANDOM_PORTAL_COOLTIME = 30 * 60 * 1000; // 30 minutes
     public static final int RANDOM_PORTAL_DURATION = 3 * 60 * 1000; // 3 minutes
     public static final long INFERNO_WOLF_HP = 60_000_000_000_000L; // 60 tril
 
 
-    public static final int LIE_DETECTOR_CHANCE = 7000; // 1 out of N
+    public static final int LIE_DETECTOR_CHANCE = ServerConfig.LIE_DETECTOR_CHANCE;
     public static final int LIE_DETECTOR_MIN_LEVEL = 180;
 
 
@@ -200,8 +201,8 @@ public class GameConstants {
     public static final String RUNE_NOTICE_TEXT = "Free the rune and lift the Elite Boss curse! \r\n" +
             "Curse Stage %d: %d%% reduction of EXP, Drop and Meso Rate in effect.";
     public static final int RUNE_CURSE_INTERVAL = 5 * 60 * 1000; // 5 minutes
-    public static final int RUNE_CURSE_MULTIPLIER_PER_LEVEL = 25; // 25% reduction of exp&item per level
-    public static final int RUNE_SPAWN_CHANCE = 100; // out of 10000
+    public static final int RUNE_CURSE_MULTIPLIER_PER_LEVEL = ServerConfig.RUNE_CURSE_MULTIPLIER_PER_LEVEL;
+    public static final int RUNE_SPAWN_CHANCE = ServerConfig.RUNE_SPAWN_CHANCE;
     public static final int LEVEL_RANGE_TO_SPAWN_RUNE = 20;
 
     // BurningField
@@ -209,22 +210,22 @@ public class GameConstants {
     public static final int BURNING_FIELD_LEVEL_ON_START = BURNING_FIELD_MAX_LEVEL; //Starts Burning Maps at BurningLevel 20
     public static final int BURNING_FIELD_TIMER = 15; // minutes
     public static final int BURNING_FIELD_MIN_MOB_LEVEL = 0; //Minimum Mob Level for the Field to become a Burning Field
-    public static final int BURNING_FIELD_BONUS_EXP_MULTIPLIER_PER_LEVEL = 5; // multiplied by the BurningField Level  =  Bonus Exp% given
+    public static final int BURNING_FIELD_BONUS_EXP_MULTIPLIER_PER_LEVEL = ServerConfig.BURNING_FIELD_BONUS_EXP_MULTIPLIER_PER_LEVEL;
 
     // Exp Orb
     public static final int BLUE_EXP_ORB_ID = 2023484;
-    public static final double BLUE_EXP_ORB_MULT = 2;
+    public static final double BLUE_EXP_ORB_MULT = ServerConfig.BLUE_EXP_ORB_MULT;
     public static final int PURPLE_EXP_ORB_ID = 2023494;
-    public static final double PURPLE_EXP_ORB_MULT = 3.5;
+    public static final double PURPLE_EXP_ORB_MULT = ServerConfig.PURPLE_EXP_ORB_MULT;
     public static final int RED_EXP_ORB_ID = 2023495;
-    public static final double RED_EXP_ORB_MULT = 5;
+    public static final double RED_EXP_ORB_MULT = ServerConfig.RED_EXP_ORB_MULT;
     public static final int GOLD_EXP_ORB_ID = 2023669;
-    public static final double GOLD_EXP_ORB_MULT = 7;
+    public static final double GOLD_EXP_ORB_MULT = ServerConfig.GOLD_EXP_ORB_MULT;
 
     // Mob
-    public static final int MOB_SKILL_CHANCE = 20;
-    public static final int MOB_ATTACK_CHANCE = 40;
-    public static final int NX_DROP_CHANCE = 25;
+    public static final int MOB_SKILL_CHANCE = ServerConfig.MOB_SKILL_CHANCE;
+    public static final int MOB_ATTACK_CHANCE = ServerConfig.MOB_ATTACK_CHANCE;
+    public static final int NX_DROP_CHANCE = ServerConfig.NX_DROP_CHANCE;
     public static final int MOB_ATTACK_COOLDOWN_MIN = 3;
     public static final int MOB_ATTACK_COOLDOWN_MAX = 5;
     public static final int MOB_RESUMMON_COOLDOWN = 30; // 2 minutes
@@ -234,12 +235,12 @@ public class GameConstants {
     // Elite mob
     public static final int ELITE_MOB_SKILL_COUNT = 2;
     public static final int ELITE_MOB_RESPAWN_TIME = 150; // seconds
-    public static final int ELITE_MOB_SPAWN_CHANCE = 5; // out of a 1000
+    public static final int ELITE_MOB_SPAWN_CHANCE = ServerConfig.ELITE_MOB_SPAWN_CHANCE;
     public static final int ELITE_MOB_DARK_NOTIFICATION = 17;
     public static final int ELITE_BOSS_REQUIRED_KILLS = 20;
     public static final Integer[] ELITE_BOSS_TEMPLATES = new Integer[]{8220022, 8220023, 8220024, 8220025, 8220026};
     public static final String ELITE_BOSS_BGM = "Bgm45/Anthem For Heroes";
-    public static final long ELITE_BOSS_HP_RATE = 500; // multiplier for boss' hp compared to the mobs on the map
+    public static final long ELITE_BOSS_HP_RATE = ServerConfig.ELITE_BOSS_HP_RATE;
     public static final int ELITE_CHAMPION_CYCLIC_COUNT = 5; // every 5 elite mobs, it will spawn a random elite champion
     public static final int ELITE_CHAMPION_TIME_LIMIT = 150; // 150 seconds
 
@@ -253,13 +254,13 @@ public class GameConstants {
     public static final int MAX_FAMILIAR_SLOTS = 2000; // amount of familiars
     public static final int STARTING_FAMILIAR_SLOTS = 100; // default amount of familiars
     public static final int MAX_SUMMON_GAUGE = 2000;
-    public static final int EXP_PER_KILL = 1;
+    public static final int EXP_PER_KILL = ServerConfig.EXP_PER_KILL;
     public static final int MAX_FAMILIAR_LEVEL_U_L = 7;
     public static final int MAX_FAMILIAR_LEVEL_C_R_E = 5;
     public static final Rect FAMILIAR_AFFECT_NEARBY_ALLIES_RECT = new Rect(-300, -300, 300, 300);
     // Familiar Red Card
-    public static final int RANK_UP_CHANCE = 4; // Chance to rank your familiar up
-    public static final int SECONDARY_LINE_PRIME_CHANCE = 50; // Chance for the second line of familiar potential to be prime when rolled.
+    public static final int RANK_UP_CHANCE = ServerConfig.RANK_UP_CHANCE;
+    public static final int SECONDARY_LINE_PRIME_CHANCE = ServerConfig.SECONDARY_LINE_PRIME_CHANCE;
 
 
     // Megaphone
@@ -286,7 +287,7 @@ public class GameConstants {
     public static final int SURPRISE_MISSION_MIN_LEVEL = 33;
     public static final int SURPRISE_MISSION_CLAIM_REWARD_TIME_LIMIT = 60; // seconds
     public static final int SURPRISE_MISSION_COOLTIME = 20 * 60 * 1000; // 20 minutes | Cooltime on mission
-    public static final int SURPRISE_MISSION_CHANCE = 5; // chance of succeeding and gaining a mission
+    public static final int SURPRISE_MISSION_CHANCE = ServerConfig.SURPRISE_MISSION_CHANCE;
     public static final int SURPRISE_MISSION_TRY_FREQUENCY = 3; // 3 minutes | We try to give mission every 3 minutes
 
     // Field Ownership
@@ -388,9 +389,9 @@ public class GameConstants {
     };
 
     // Nodestone
-    public static final int NODE_SELF_JOB_CHANCE = 75;
-    public static final int NODE_ENFORCE_CHANCE = 60;
-    public static final int NODE_SKILL_CHANCE = 30;
+    public static final int NODE_SELF_JOB_CHANCE = ServerConfig.NODE_SELF_JOB_CHANCE;
+    public static final int NODE_ENFORCE_CHANCE = ServerConfig.NODE_ENFORCE_CHANCE;
+    public static final int NODE_SKILL_CHANCE = ServerConfig.NODE_SKILL_CHANCE;
     public static final int SPECIAL_NODE_ACTIVATION_CD = 30; // 30 seconds
 
     public static long[] charExp = new long[300];
@@ -405,7 +406,7 @@ public class GameConstants {
     public static final long AUCTION_DEPOSIT_AMOUNT = 2000;
     public static final long AUCTION_MIN_PRICE = 50;
     public static final long AUCTION_MAX_PRICE = 99_999_999_999L;
-    public static final double AUCTION_TAX = 0.95; // 5%
+    public static final double AUCTION_TAX = ServerConfig.AUCTION_TAX;
 
     // Skills
     public static final int TIME_LEAP_QR_KEY = 99996; // Quest where personal Time Leap CDs get stored

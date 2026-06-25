@@ -1,5 +1,6 @@
 package net.swordie.ms.constants;
 
+import net.swordie.ms.ServerConfig;
 import java.util.Map;
 
 /**
@@ -12,8 +13,8 @@ public class SkillChangeConstants {
     // Legion
     public static final int LEGION_CHANCE_HEAL_HP_SKILLID = 71000211; // Aran Legion Card SkillId
     public static final int LEGION_CHANCE_HEAL_MP_SKILLID = 71000221; // Evan Legion Card SkillId
-    public static final int CHANCE_TO_HEAL_HP = 70;
-    public static final int CHANCE_TO_HEAL_MP = 70;
+    public static final int CHANCE_TO_HEAL_HP = ServerConfig.CHANCE_TO_HEAL_HP;
+    public static final int CHANCE_TO_HEAL_MP = ServerConfig.CHANCE_TO_HEAL_MP;
     public static final int HEAL_COOLTIME = 10 * 1000; // 10 seconds cooldown
 
 
@@ -438,7 +439,7 @@ public class SkillChangeConstants {
     public static final boolean BOLT_BARRAGE_STICK_TO_BOSS = true;
     public static final boolean BOLT_BARRAGE_PROC_BY_THUNDERSTORM = true;
     public static final boolean CHILLING_STEP_BOSSING_MODE = true;
-    public static final int CHILLING_STEP_BOSS_MODE_PROC_CHANCE = 90;
+    public static final int CHILLING_STEP_BOSS_MODE_PROC_CHANCE = ServerConfig.CHILLING_STEP_BOSS_MODE_PROC_CHANCE;
     public static final int CHILLING_STEP_ICE_AGE_TILE_DURATION = 3500;
     public static final int CHILLING_STEP_ICE_AGE_TILE_COUNT = 6;
     public static final boolean ELQUINES_PROC_ICE_AGE_TILE = true;
@@ -550,7 +551,7 @@ public class SkillChangeConstants {
      *
      */
     public static final boolean MELTTDOWN_ENERGY_ORB_CHARGES = true;
-    public static final int DRAGON_STRIKE_DEBUFF_DURATION_MULTIPLIER = 3;
+    public static final int DRAGON_STRIKE_DEBUFF_DURATION_MULTIPLIER = ServerConfig.DRAGON_STRIKE_DEBUFF_DURATION_MULTIPLIER;
     public static final boolean SPIRAL_ASSAULT_NO_CD = true;
 
     public static String getBuccaneerSkillChangeString() {
@@ -640,7 +641,7 @@ public class SkillChangeConstants {
      * Orbital Flame Range - Increased the added range
      *
      */
-    public static final double ORBITAL_FLAME_RANGE_MULTIPLIER = 1.5D; // Multiplier on the Added Range Hyper On/Off
+    public static final double ORBITAL_FLAME_RANGE_MULTIPLIER = ServerConfig.ORBITAL_FLAME_RANGE_MULTIPLIER;
 
     public static String getBlazeWizardSkillChangeString() {
         return "" +
@@ -660,8 +661,8 @@ public class SkillChangeConstants {
     public static final int TRIFFLING_WIND_PROC_BONUS_MAX = 15; // 15% increase to triffling wind creation
     public static final int TRIFFLING_WIND_DELAY_REDUCTION_PER_SEC = 8; // 8ms delay decrease per second
     public static final int TRIFFLING_WIND_DELAY_REDUCTION_MAX = 170; // 170ms delay reduction
-    public static final double TRIFFLING_WIND_SIMPACT_MULTIPLIER_PER_SECOND = 5D; // 1 + (1/5D) increase per second
-    public static final double TRIFFLING_WIND_SIMPACT_MULTIPLIER_MAX = 6D; // 6x max increase
+    public static final double TRIFFLING_WIND_SIMPACT_MULTIPLIER_PER_SECOND = ServerConfig.TRIFFLING_WIND_SIMPACT_MULTIPLIER_PER_SECOND;
+    public static final double TRIFFLING_WIND_SIMPACT_MULTIPLIER_MAX = ServerConfig.TRIFFLING_WIND_SIMPACT_MULTIPLIER_MAX;
     public static final int TRIFFLING_WIND_KEYDOWN_GIFT_MS = 2000; // 1500ms
 
 
@@ -821,7 +822,7 @@ public class SkillChangeConstants {
      */
     public static final boolean DEMONIC_FRENZY_HEAL_CAP = true;
     public static final int DEMONIC_FRENZY_HEAL_CAP_VALUE = 2;
-    public static final int NETHER_SHIELD_BY_EXECUTION_CHANCE = 40;
+    public static final int NETHER_SHIELD_BY_EXECUTION_CHANCE = ServerConfig.NETHER_SHIELD_BY_EXECUTION_CHANCE;
     public static final int NETHER_SHIELD_BY_EXECUTION_RECREATIONS = 4;
 
     public static String getDemonAvengerSkillChangeString() {
@@ -922,7 +923,7 @@ public class SkillChangeConstants {
      *
      */
     public static final boolean GOD_OF_BLADES_INCREASES_BLADE_ENERGY = true;
-    public static final int GOD_OF_BLADES_BLADE_ENERGY_MULTIPLIER = 2;
+    public static final int GOD_OF_BLADES_BLADE_ENERGY_MULTIPLIER = ServerConfig.GOD_OF_BLADES_BLADE_ENERGY_MULTIPLIER;
     public static final int GOD_OF_BLADES_BOOSTER = -2;
 
     public static String getHayatoSkillChangeString() {
@@ -1054,7 +1055,7 @@ public class SkillChangeConstants {
      * Storm Break - damage has been decreased from 430% to 215%, number of hits has been increased from 4 to 8, whirlwinds’ damage has been decreased from 430% to 215%, number of hits has been increased from 2 to 4
      * Advanced Storm Break - damage has been decreased from 670% to 335%, number of hits has been increased from 5 to 10, whirlwinds’ damage has been decreased from 670% to 335%, number of hits has been increased from 2 to 4
      */
-    public static final int ADVANCED_TILES_DURATION_MULTIPLIER = 2; // Advanced Wind Breaker and Earth Break Duration Multiplier
+    public static final int ADVANCED_TILES_DURATION_MULTIPLIER = ServerConfig.ADVANCED_TILES_DURATION_MULTIPLIER;
     public static final boolean DOUBLE_TIME_COUNTER_REQUIRES_MOB_HITS = false; // Double time stack needs mobs to be hit to increase
     public static final int DIVINE_SPEED_BOOSTER_VALUE = -3; // Overwritten IndieBooster Value
 
@@ -1102,7 +1103,7 @@ public class SkillChangeConstants {
     public static final int MIND_BREAK_COOLDOWN = 10; // 10sec
 
     public static final boolean MIND_BREAK_FD_BUFF = true;
-    public static final int MIND_BREAK_FD_MULTIPLIER = 3;
+    public static final int MIND_BREAK_FD_MULTIPLIER = ServerConfig.MIND_BREAK_FD_MULTIPLIER;
 
     public static final boolean MIND_BREAK_MOST_BENEFICIAL_BUFF = true; // Grabs best buff from Mind Break. current one or the new one
 

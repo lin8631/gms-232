@@ -29,7 +29,7 @@ public class ServerConstants {
 	public static final short CHAT_PORT = 0;
 	public static final int BCRYPT_ITERATIONS = 5;
 	public static final long TOKEN_EXPIRY_TIME = 60 * 24; // 24h
-	public static final long CLEAR_CACHE_RATE = 4; // 24h
+	public static final long CLEAR_CACHE_RATE = ServerConfig.CLEAR_CACHE_RATE;
 	public static final Charset ENCODING = Charset.forName("gbk");
 //	public static final Charset ENCODING = StandardCharsets.UTF_8;
 	public static boolean CHECK_WZ_ON_LOGIN = false;

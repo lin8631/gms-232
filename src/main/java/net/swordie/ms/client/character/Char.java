@@ -382,7 +382,7 @@ public class Char {
     private Set<FirstEnterReward> firstEnterRewards;
     private MiniRoom miniRoom;
     private List<MiniGameRecord> miniGameRecords;
-    private int currentExpRate;
+    private double currentExpRate;
 
     public Char() {
         itemPots = new ArrayList<>();
@@ -2668,7 +2668,7 @@ public class Char {
         }
     }
 
-    public int getCurrentLevelExpRate() {
+    public double getCurrentLevelExpRate() {
         if (currentExpRate == 0) {
             updateExpRate();
         }
