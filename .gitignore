@@ -7,7 +7,7 @@ wz/
 
 wzdat/
 info txts/
-dat/
+#   dat/
 bin/classes/headerText.txt
 bin/classes/decodeforlocal.txt
 bin/
