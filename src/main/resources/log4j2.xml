@@ -5,19 +5,49 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] %c - %m%n"/>
             <ThresholdFilter level="INFO"/>
         </Console>
-        <File name="AppFile" fileName="logs/app.log">
+        <RollingFile name="AppFile" fileName="logs/app.log"
+                     filePattern="logs/app-%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] %c - %m%n"/>
             <ThresholdFilter level="INFO"/>
-        </File>
-        <File name="MobFile" fileName="logs/MOB.log">
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="MobFile" fileName="logs/MOB.log"
+                     filePattern="logs/MOB-%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] %c - %m%n"/>
             <RegexFilter regex=".*MOB_MOVE.*|.*MOB_CTRL_ACK.*" onMatch="ACCEPT" onMismatch="DENY"/>
-        </File>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
+        <RollingFile name="NpcFile" fileName="logs/npc.log"
+                     filePattern="logs/npc-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] %c - %m%n"/>
+            <ThresholdFilter level="INFO"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="PortalFile" fileName="logs/portal.log"
+                     filePattern="logs/portal-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] %c - %m%n"/>
+            <ThresholdFilter level="INFO"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="org.hibernate" level="off"/>
         <Logger name="org.hibernate.SQL" level="off"/>
         <Logger name="org.hibernate.type" level="off"/>
+
+        <Logger name="net.swordie.ms.handlers.life.NpcHandler" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="NpcFile"/>
+        </Logger>
+
+        <Logger name="net.swordie.ms.handlers.user.MigrationHandler" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="PortalFile"/>
+        </Logger>
 
         <Root level="debug">
             <AppenderRef ref="Console"/>

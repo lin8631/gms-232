@@ -24,6 +24,7 @@ import net.swordie.ms.handlers.Handler;
 import net.swordie.ms.handlers.header.InHeader;
 import net.swordie.ms.life.npc.Npc;
 import net.swordie.ms.loaders.NpcData;
+import net.swordie.ms.loaders.StringData;
 import net.swordie.ms.scripts.ScriptType;
 import net.swordie.ms.world.TransferInfo;
 import net.swordie.ms.world.field.Field;
@@ -335,6 +336,15 @@ public class MigrationHandler {
         byte portalID = inPacket.decodeByte();
         String portalName = inPacket.decodeString();
         Portal portal = chr.getField().getInfo().getPortalByName(portalName);
+
+        int mapId = chr.getField().getInfo().getId();
+        String mapName = StringData.getMapStrings().getOrDefault(mapId, "");
+        String portalInfo = String.format(
+                "[Portal] 地图: %d (%s) | 传送门: %s | 脚本: %s",
+                mapId, mapName, portalName, portal != null ? portal.getScript() : "null");
+        chr.chatMessage(ChatType.Tip, portalInfo);
+        log.info(portalInfo);
+
         String script = portalName;
         if (portal != null) {
             portalID = (byte) portal.getId();
@@ -354,6 +364,15 @@ public class MigrationHandler {
         if (field != null && field.getInfo() != null) {
             portal = chr.getField().getInfo().getPortalByName(portalName);
         }
+
+        int mapId = chr.getField().getInfo().getId();
+        String mapName = StringData.getMapStrings().getOrDefault(mapId, "");
+        String targetMap = portal != null ? String.valueOf(portal.getTargetMapId()) : "?";
+        String portalInfo = String.format(
+                "[Portal] 地图: %d (%s) | 传送门: %s | 目标地图: %s",
+                mapId, mapName, portalName, targetMap);
+        chr.chatMessage(ChatType.Tip, portalInfo);
+        log.info(portalInfo);
 
         Events.onPortalTeleportRequest(chr, portal);
     }

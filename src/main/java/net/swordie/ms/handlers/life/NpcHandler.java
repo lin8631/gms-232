@@ -25,6 +25,7 @@ import net.swordie.ms.life.npc.Npc;
 import net.swordie.ms.loaders.ItemData;
 import net.swordie.ms.loaders.NpcData;
 import net.swordie.ms.loaders.QuestData;
+import net.swordie.ms.loaders.StringData;
 import net.swordie.ms.loaders.containerclasses.QuestInfo;
 import net.swordie.ms.scripts.ScriptType;
 import net.swordie.ms.util.Position;
@@ -62,6 +63,22 @@ public class NpcHandler {
         }
         Npc npc = (Npc) life;
         int templateID = npc.getTemplateId();
+
+        // NPC 信息输出
+        String npcName = StringData.getNpcStringById(templateID);
+        int mapId = chr.getField().getInfo().getId();
+        String mapName = StringData.getMapStrings().getOrDefault(mapId, "未知地图");
+        Position npcPos = npc.getPosition();
+        String scriptList = String.join(", ", npc.getScripts().values());
+        if (scriptList.isEmpty()) {
+            scriptList = String.valueOf(templateID);
+        }
+        String npcInfo = String.format(
+                "[NPC] ID: %d (%s) | 地图: %d (%s) | 脚本: %s | 坐标: (%d, %d)",
+                templateID, npcName, mapId, mapName, scriptList, npcPos.getX(), npcPos.getY());
+        chr.chatMessage(ChatType.Tip, npcInfo);
+        log.info(npcInfo);
+
         if ((npc.getTrunkGet() > 0 || npc.getTrunkPut() > 0) && !chr.isInTrunk()) {
             chr.setInTrunk(true);
             chr.write(FieldPacket.trunkDlg(TrunkDlg.open(templateID, chr.getAccount().getTrunk())));

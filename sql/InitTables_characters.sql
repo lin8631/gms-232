@@ -106,6 +106,7 @@ create table quests
     questmanager_id bigint,
     qrkey           int,
     qrvalue         varchar(255),
+    qrExValue       varchar(255),
     status          int,
     completedtime   datetime,
     primary key (id),
