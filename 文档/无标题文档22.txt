@@ -1,0 +1,32 @@
+这个 Web API 是一个 REST 接口（端口 `3000`），**没有图形页面**，需要用 HTTP 客户端调用。完整端点：
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| `GET` | `/api/status` | 服务器状态 |
+| `POST` | `/api/login` | 登录，返回 token |
+| `DELETE` | `/api/login` | 登出 |
+| `POST` | `/api/users` | 注册账号 |
+| `GET` | `/api/users/{id}` | 用户信息（需 token） |
+| `PUT` | `/api/users/{id}/password` | 改密码（需 token） |
+| `POST` | `/api/forgot-username` | 找回用户名 |
+| `POST` | `/api/password-reset-request` | 请求重置密码 |
+| `POST` | `/api/password-reset` | 重置密码 |
+| `POST` | `/api/pic-reset` | 重置 PIC |
+| `GET` | `/api/trade-log?userId=&limit=` | 交易日志 |
+| `POST` | `/api/shutdown` | 关闭服务器 |
+| `POST` | `/api/ssb` | 签到相关 |
+| `POST` | `/api/skill-change` | 技能变更 |
+
+快速测试：
+
+```bash
+# 查看服务器状态
+curl http://localhost:3000/api/status
+
+# 登录获取 token
+curl -X POST http://localhost:3000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"your_acc","password":"your_pw"}'
+```
+
+没有内置的前端页面，如果需要网页后台管理，需要自己写前端来调这些接口。

@@ -1,0 +1,118 @@
+已实现服务器端宠吸功能，修改内容：
+
+### 修改文件
+
+**1. `CustomConstants.java`** — 新增配置项
+
+PET_VACUUM_RANGE = 400;        // 拾取范围
+PET_VACUUM_INTERVAL = 1200;    // 拾取间隔 (毫秒)
+
+
+**2. `Char.java`** — 核心逻辑
+- 新增 `ScheduledFuture petVacuumTimer` 字段
+- `hasAnyPetSummoned()` — 判断是否有宠物出战
+- `startPetVacuum()` — 启动 1.2 秒定时的宠吸循环
+- `stopPetVacuum()` — 停止定时器
+- `petVacuumTick()` — 每次触发时，扫描角色周围 400 码内的掉落物，自动拾取
+- `addPet()` / `removePet()` — 召唤/解除宠物时自动启停宠吸
+- `stopTimers()` — 下线时停止宠吸定时器
+
+### 工作原理
+
+- 当宠物出战（召唤）时，自动启动 1.2 秒间隔的定时任务
+- 每 tick 检测角色周围 400px 范围内的掉落物
+- 过滤：可拾取、可刷新、非盗窃掉落 → 自动拾取（金钱攒一起加，道具逐个拾取）
+- 宠物全部解除或角色下线时自动停止
+- 可调的 `CustomConstants` 配置项：全局开关、范围、间隔
+
+
+现在宠吸配置改到 `resources/pet.properties`，修改后重启服务器即可，**不再需要改源码重编译**。
+
+
+resources/pet.properties
+├── petVacuum.range    = 400    # 拾取范围
+└── petVacuum.interval = 1200   # 拾取间隔 (ms)
+
+
+启动逻辑：服务器启动时 `CustomConstants` 的静态代码块自动加载该文件，文件不存在或读取失败则使用代码内默认值，不会报错。
+
+
+编译成功。改动总结：
+
+**修改文件：**
+
+| 文件 | 改动 |
+|------|------|
+| `CustomConstants.java` | 移除全局 `PET_VACUUM_ENABLED`，保留 `RANGE`/`INTERVAL` 从配置文件读取 |
+| `Char.java` | 新增 `petVacuumEnabled` 角色标记位 + `isPetVacuumEnabled()`/`setPetVacuumEnabled()` |
+| `PlayerCommands.java` | 新增 `@petvac` 指令 |
+| `pet.properties` | 只保留 `range`/`interval`，移除 `enabled` |
+
+**使用方式：**
+
+1. 游戏内输入 `@petvac` 开启宠吸，再次输入关闭
+2. 每个角色独立记忆状态
+3. 范围/间隔改 `resources/pet.properties` 后重启服务器
+4. 召唤宠物时自动启动定时器，但只有 `@petvac` 开启的角色才会真正拾取
+
+
+====================================================
+## 宠吸功能说明
+
+### 如何使用
+
+1. 游戏内输入 `@petvac` 开启，再次输入关闭
+2. 开启后**必须召唤宠物**才会生效
+3. 每个角色独立开关，其他角色不受影响
+4. 每秒拾取一次角色周围 400 码内的掉落物
+
+### 配置文件 `resources/pet.properties`
+
+```properties
+petVacuum.range = 400        # 拾取范围，单位与客户端坐标一致
+petVacuum.interval = 1200    # 扫描间隔，单位毫秒
+```
+
+修改后重启服务器生效。
+
+### 实现原理
+
+**整体流程：**
+
+```
+召唤宠物 → Char.addPet() → startPetVacuum()
+                        → EventManager 注册 FixedRateEvent(1.2s)
+                             ↓ 每 tick
+                        → petVacuumTick()
+                             ↓
+                        → Field.getDropsInRect() 扫描周围掉落
+                             ↓
+                        → 过滤：可拾取 + 可刷新 + 非盗窃掉落
+                             ↓
+                        → addDrop() 入库 + removeDrop() 广播
+                        
+解除宠物 → Char.removePet()
+                        → 无剩余宠物 → stopPetVacuum()
+下线     → Char.stopTimers() → stopPetVacuum()
+```
+
+**关键代码位置：**
+
+| 职责 | 文件 | 关键方法/字段 |
+|------|------|-------|
+| 配置项 | `CustomConstants.java:20-21` | `PET_VACUUM_RANGE`, `PET_VACUUM_INTERVAL` |
+| 配置文件加载 | `CustomConstants.java:31-37` | `loadConfig()` 静态块 |
+| 角色开关 | `Char.java:358` | `petVacuumEnabled` 字段 |
+| 启停控制 | `Char.java:7029-7041` | `setPetVacuumEnabled()` / `startPetVacuum()` / `stopPetVacuum()` |
+| 拾取逻辑 | `Char.java:7049-7090` | `petVacuumTick()` |
+| 生命周期挂接 | `Char.java:4377-4388` | `addPet()` / `removePet()` |
+| 下线清理 | `Char.java:7148` | `stopTimers()` → `stopPetVacuum()` |
+| 玩家指令 | `PlayerCommands.java:286-296` | `@petvac` |
+| 配置文件 | `resources/pet.properties` | 范围/间隔 |
+
+**拾取范围判定：** 以角色坐标为中心，`PET_VACUUM_RANGE` 为边长构造矩形，调用 `Field.getDropsInRect()` 筛选掉落物。
+
+**过滤规则：**
+- 必须通过 `drop.canBePickedUpBy(chr)`（自己/队友/公共掉落）
+- 必须通过 `drop.canSpawn(chr)`（未在忽略列表）
+- 必须通过 `ItemConstants.isNotLootableByPetVac(drop)`（排除盗窃技能掉落）

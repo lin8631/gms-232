@@ -4,6 +4,7 @@ import net.swordie.ms.Server;
 import net.swordie.ms.client.User;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.FirstEnterReward;
+import net.swordie.ms.constants.CustomConstants;
 import net.swordie.ms.constants.JobConstants;
 import net.swordie.ms.constants.QuestConstants;
 import net.swordie.ms.enums.AccountType;
@@ -278,6 +279,19 @@ public class PlayerCommands {
             }
 
             chr.checkFirstEnterReward();
+        }
+    }
+
+    @Command(names = {"petvac"}, requiredType = Player)
+    public static class PetVacuum extends PlayerCommand {
+        public static void execute(Char chr, String[] args) {
+            boolean on = !chr.isPetVacuumEnabled();
+            chr.setPetVacuumEnabled(on);
+            if (on) {
+                chr.chatMessage("[宠吸] 已开启，宠物自动拾取范围 %d。输入 @petvac 关闭。", CustomConstants.PET_VACUUM_RANGE);
+            } else {
+                chr.chatMessage("[宠吸] 已关闭。");
+            }
         }
     }
 }

@@ -1,0 +1,8 @@
+sudo systemctl start mysql
+
+首次启动前需编译：mvn clean package -DskipTests
+
+| **启动** | ./start.sh
+| **停止** | kill $(cat server.pid)
+| **查看日志** | tail -f server.log
+| **重启** | kill $(cat server.pid) && ./start.sh

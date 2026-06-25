@@ -1,19 +1,14 @@
 ## 环境依赖与架设指南
 
 ### 所需环境
-
-| 依赖 | 版本 | 说明 |
-|------|------|------|
-| **JDK** | **21** | 必需，pom.xml 指定 Java 21 |
-| **MySQL** | 8.0+ | 数据库，连接端口 **3308**（硬编码） |
-| **Maven** | 3.x | 构建工具，编译打包用 |
-| **WZ 文件** | 无 | 需自行准备 `wz/` 目录（v232 客户端数据文件） |
+| JDK | 21 | 必需，pom.xml 指定 Java 21 |
+| MySQL | 8.0+ | 数据库，连接端口 3308（硬编码） |
+| Maven | 3.x | 构建工具，编译打包用 |
+| WZ文件 | 无 | 需自行准备 wz/ 目录（v232 客户端数据文件） |
 
 ### 项目目录结构约定
+所有路径相对于运行目录（user.dir），在ServerConstants.java:10-20定义：
 
-所有路径相对于运行目录（`user.dir`），在 `ServerConstants.java:10-20` 定义：
-
-```
 项目根目录/
 ├── wz/              # WZ 游戏数据文件（需自行放置，VERSION_FOR_WZ = 777）
 ├── dat/             # 解析 WZ 后的缓存目录（自动生成）
@@ -29,22 +24,19 @@
 ├── bat/             # 批处理目录（被 @pull 命令使用，不存在则需创建）
 ├── client/          # 游戏客户端 v232.exe
 └── pom.xml          # Maven 构建文件
-```
+
 
 ### 架设步骤
-
 **1. 准备工作**
-```bash
 # 安装 JDK 21 和 MySQL 8.0+
 # 确保 mvn 命令可用
-```
+
 
 **2. 初始化数据库**
-```bash
+
 # 创建数据库
 mysql -u root -p -h 127.0.0.1 -P 3308
 mysql> CREATE DATABASE swordie232 DEFAULT CHARSET utf8mb4;
-
 # 导入建表脚本（按顺序）
 mysql -u root -p -h 127.0.0.1 -P 3308 swordie232 < sql/InitTable_characters.sql
 mysql -u root -p -h 127.0.0.1 -P 3308 swordie232 < sql/InitTable_drops.sql
@@ -59,46 +51,40 @@ mysql -u root -p -h 127.0.0.1 -P 3308 swordie232 < sql/migration/V59_*.sql
 
 # 初始化管理员账户（可选）
 mysql -u root -p -h 127.0.0.1 -P 3308 swordie232 < sql/Init_Admin_accounts.sql
-```
+
 
 **3. 修改数据库连接配置**
-
 编辑 `src/main/java/net/swordie/orm/connection/HikariCPDataSource.java`：
-```java
+
 // 默认连接 127.0.0.1:3308，用户名 root，密码 123456
 // 根据实际环境修改
-```
+
 
 **4. 放置 WZ 文件**
-
-将 MapleStory v232 客户端 WZ 文件放入 `wz/` 目录。
+将 MapleStory v232 客户端 WZ 文件放入wz/目录。
 
 **5. 配置世界服务器**
-
 编辑 `resources/world/` 下的 Properties 文件：
-```properties
 world.enabled=true
 world.id=Aurora
 world.name=Aurora
 world.maxChannels=20
 # ...
-```
+
 
 **6. 编译打包**
-```bash
 mvn clean package -DskipTests
 # 生成 fat JAR: bin/maplestory-1.77.3-shaded.jar
-```
+
 
 **7. 启动服务端**
-```bash
+
 java -jar bin/maplestory-1.77.3-shaded.jar
-```
+
 
 ### 关键配置项
 
 | 配置 | 位置 | 默认值 |
-|------|------|--------|
 | Login 端口 | `ServerConstants.java:26` | 8484 |
 | 内部 API 端口 | `ServerConstants.java:27` | 8483 |
 | Web API 端口 | `ServerConstants.java:28` | 3000 |
@@ -110,5 +96,7 @@ java -jar bin/maplestory-1.77.3-shaded.jar
 
 1. **数据库编码**：需用 `utf8mb4`，代码内使用 GBK 编码处理网络包
 2. **WZ 验证**：`ServerConstants.java:41` 有硬编码的 WZ 哈希值，WZ 文件需匹配
+
 3. **本地调试后门**（安全审查中的高危项）：`LoginHandler.java:202-216` 的自动登录逻辑在生产环境建议移除
+
 4. **可选依赖**：`SworDiscord` 服务（端口 5000，用于 Discord 集成，非必需）

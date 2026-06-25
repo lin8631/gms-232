@@ -305,6 +305,7 @@ public class Char {
     private int comboCounter;
     private ScheduledFuture itemExpiryTimer;
     private ScheduledFuture lieDetectorTimer;
+    private ScheduledFuture petVacuumTimer;
     private int deathCount = -1;
     private MemorialCubeInfo memorialCubeInfo;
     private boolean skillCDBypass = false;
@@ -354,6 +355,7 @@ public class Char {
     private BossInfo bossInfo;
     private boolean inAuctionHouse;
     private boolean hasPetVac;
+    private boolean petVacuumEnabled;
     private long lastComboKill;
     private int stylishKillSkin = -1; // default -1
     // 黄门信息
@@ -4309,10 +4311,16 @@ public class Char {
 
     public void addPet(Pet pet) {
         getPets().add(pet);
+        if (pet != null) {
+            startPetVacuum();
+        }
     }
 
     public void removePet(Pet pet) {
         getPets().remove(pet);
+        if (!hasAnyPetSummoned()) {
+            stopPetVacuum();
+        }
     }
 
     public void initPets() {
@@ -7007,6 +7015,95 @@ public class Char {
         setHasPetVac(getEtcInventory().hasItem(CustomConstants.PET_VAC));
     }
 
+    // === 宠吸 (Pet Vacuum) ===
+
+    public boolean isPetVacuumEnabled() {
+        return petVacuumEnabled;
+    }
+
+    public void setPetVacuumEnabled(boolean enabled) {
+        this.petVacuumEnabled = enabled;
+        if (enabled) {
+            startPetVacuum();
+        } else {
+            stopPetVacuum();
+        }
+    }
+
+    public boolean hasAnyPetSummoned() {
+        return getPets() != null && getPets().stream().anyMatch(p -> p != null);
+    }
+
+    public void startPetVacuum() {
+        if (!petVacuumEnabled) {
+            return;
+        }
+        if (petVacuumTimer != null) {
+            return;
+        }
+        petVacuumTimer = EventManager.addFixedRateEvent(
+                this::petVacuumTick, 1000, CustomConstants.PET_VACUUM_INTERVAL);
+    }
+
+    public void stopPetVacuum() {
+        if (petVacuumTimer != null) {
+            EventManager.stopTimer(petVacuumTimer);
+            petVacuumTimer = null;
+        }
+    }
+
+    private void petVacuumTick() {
+        try {
+            if (!petVacuumEnabled || getField() == null || getMiniRoom() != null) {
+                return;
+            }
+            if (!hasAnyPetSummoned()) {
+                return;
+            }
+
+            Position chrPos = getPosition();
+            if (chrPos == null) {
+                return;
+            }
+            int range = CustomConstants.PET_VACUUM_RANGE;
+            Rect vacuumRect = new Rect(
+                    chrPos.getX() - range, chrPos.getY() - range,
+                    chrPos.getX() + range, chrPos.getY() + range);
+
+            var drops = getField().getDropsInRect(vacuumRect);
+            if (drops.isEmpty()) {
+                return;
+            }
+
+            int money = 0;
+            for (var drop : drops) {
+                if (!drop.canBePickedUpBy(this) || !drop.canSpawn(this)) {
+                    continue;
+                }
+                if (ItemConstants.isNotLootableByPetVac(drop)) {
+                    continue;
+                }
+
+                var pickedUp = true;
+                if (drop.isMoney()) {
+                    money += drop.getMoney();
+                } else {
+                    pickedUp = addDrop(drop, true);
+                }
+                if (pickedUp) {
+                    getField().removeDrop(drop.getObjectId(), getId(), false, 0);
+                }
+            }
+            if (money > 0) {
+                addMoney(money, true);
+                QuestManagerHandler.handleMoneyGain(getQuestManager(), money);
+                write(WvsContext.message(MessagePacket.dropPickupMessage(money, (short) 0)));
+            }
+        } catch (Exception e) {
+            // 宠吸异常不影响主逻辑
+        }
+    }
+
     private void setMegaphonesOnCooldown() {
         setMegaphoneCooldown();
         setAvatarMegaphoneCooldown();
@@ -7081,6 +7178,7 @@ public class Char {
         }
         EventManager.stopTimer(itemExpiryTimer);
         itemExpiryTimer = null;
+        stopPetVacuum();
     }
 
     public Set<Integer> getIgnoredItems() {
